@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Contact Us | School Of Science</title>
+  <link rel="stylesheet" href="../../assets/css/design-system.css" />
+  <style>
+    .contact-info-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-4);
+    }
+
+    .contact-info-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .contact-info-item:last-child { border-bottom: none; }
+
+    .contact-info-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--color-accent-light);
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .contact-info-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .contact-info-value {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .contact-info-value a {
+      color: var(--color-primary);
+    }
+
+    .form-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-4);
+    }
+
+    .form-card h2 {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-5);
+    }
+
+    .success-msg {
+      background: var(--color-success-light);
+      border: 1px solid var(--color-success);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      text-align: center;
+      color: var(--color-success);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .success-msg.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div id="app-header"></div>
+
+  <div class="page-content">
+
+    <!-- Contact Info -->
+    <div class="contact-info-card">
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📍</div>
+        <div>
+          <div class="contact-info-label">Address</div>
+          <div class="contact-info-value">School Of Science, Gram Bheeta Mafi, Post Hatwa Bazar, Basti, Uttar Pradesh - 272126</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📞</div>
+        <div>
+          <div class="contact-info-label">Phone</div>
+          <div class="contact-info-value"><a href="tel:+919838266444">+91 98382 66444</a></div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">✉️</div>
+        <div>
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-value"><a href="mailto:info@schoolofscience.edu.in">info@schoolofscience.edu.in</a></div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">🕐</div>
+        <div>
+          <div class="contact-info-label">School Hours</div>
+          <div class="contact-info-value">Mon–Sat: 8:45 AM – 2:00 PM</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">👨‍💼</div>
+        <div>
+          <div class="contact-info-label">Principal & Director</div>
+          <div class="contact-info-value">Shri Ramakant Pandey</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="form-card">
+      <h2>Send a Message</h2>
+
+      <div class="success-msg hidden" id="success-msg">
+        ✅ Message sent! We'll contact you soon.
+      </div>
+
+      <form id="contact-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="contact-name">Your Name *</label>
+          <input type="text" id="contact-name" class="form-control" placeholder="Enter your name" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-phone">Phone Number</label>
+          <input type="tel" id="contact-phone" class="form-control" placeholder="+91 XXXXX XXXXX" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-subject">Subject</label>
+          <input type="text" id="contact-subject" class="form-control" placeholder="Regarding admission / fees / etc." />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-message">Message *</label>
+          <textarea id="contact-message" class="form-control" rows="4"
+                    placeholder="Write your message here..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-btn">
+          Send Message
+        </button>
+      </form>
+    </div>
+
+    <!-- Google Map Embed -->
+    <div style="border:1px solid var(--color-border); border-radius:var(--radius-xl); overflow:hidden; margin-bottom:var(--space-4); box-shadow:var(--shadow-sm);">
+      <iframe src="https://maps.google.com/maps?q=Gram%20Bheeta%20Mafi%20Post%20Hatwa%20Bazar%20Basti%20Uttar%20Pradesh%20272126&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+              width="100%" 
+              height="320" 
+              style="border:0; display:block;" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+
+  </div>
+
+  <div id="bottom-nav"></div>
+
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/components.js"></script>
+  <script src="contact.js"></script>
+  <script>
+    Components.renderHeader({ showBack: true, title: 'Contact Us' });
+    Components.renderBottomNav('home');
+  </script>
+</body>
+</html>

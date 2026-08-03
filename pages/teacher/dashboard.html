@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Teacher Dashboard | School Of Science</title>
+  <link rel="stylesheet" href="../../assets/css/design-system.css" />
+  <style>
+    .welcome-strip {
+      background: linear-gradient(135deg, #1a3a2a 0%, #2d6a4a 100%);
+      padding: var(--space-6) var(--container-pad);
+      color: white;
+    }
+    .welcome-greeting { font-size: var(--font-size-sm); opacity: 0.85; margin-bottom: 4px; }
+    .welcome-name { font-size: var(--font-size-2xl); font-weight: 800; margin-bottom: 4px; }
+    .welcome-meta { font-size: var(--font-size-xs); opacity: 0.75; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); margin-bottom: var(--space-5); }
+    .stat-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-4); text-align: center; }
+    .stat-icon { font-size: 24px; margin-bottom: var(--space-1); }
+    .stat-value { font-size: var(--font-size-xl); font-weight: 800; color: var(--color-primary); }
+    .stat-label { font-size: 10px; color: var(--color-text-muted); font-weight: 500; margin-top: 2px; }
+
+    .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-5); }
+    .action-card {
+      background: var(--color-white); border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl); padding: var(--space-5) var(--space-4);
+      text-align: center; cursor: pointer; transition: var(--transition-fast); text-decoration: none; display: block;
+    }
+    .action-card:active { transform: scale(0.96); background: var(--color-accent-light); }
+    .action-icon {
+      width: 52px; height: 52px; background: var(--color-accent-light);
+      border: 1px solid var(--color-accent); border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+      margin: 0 auto var(--space-3);
+    }
+    .action-title { font-size: var(--font-size-sm); font-weight: 700; color: var(--color-text-primary); }
+
+    .dashboard-tabs {
+      display: flex; gap: 0; border-bottom: 2px solid var(--color-border);
+      margin-bottom: var(--space-5); overflow-x: auto; scrollbar-width: none;
+    }
+    .dashboard-tabs::-webkit-scrollbar { display: none; }
+    .dash-tab {
+      padding: var(--space-3) var(--space-4); font-size: var(--font-size-sm); font-weight: 600;
+      color: var(--color-text-muted); border-bottom: 2px solid transparent; margin-bottom: -2px;
+      cursor: pointer; white-space: nowrap; background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .dash-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Upload form card */
+    .upload-card {
+      background: var(--color-white); border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl); padding: var(--space-6); margin-bottom: var(--space-4);
+    }
+    .upload-card h3 { font-size: var(--font-size-lg); font-weight: 700; margin-bottom: var(--space-5); }
+
+    /* Student list row */
+    .student-row {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-light);
+    }
+    .student-row:last-child { border-bottom: none; }
+    .student-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--color-accent-light); border: 2px solid var(--color-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: var(--font-size-sm); color: var(--color-primary); flex-shrink: 0;
+    }
+    .student-name { font-size: var(--font-size-sm); font-weight: 600; }
+    .student-meta { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+
+    /* Attendance marking */
+    .attendance-mark-row {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-light);
+    }
+    .att-status-btns { display: flex; gap: var(--space-2); margin-left: auto; flex-shrink: 0; }
+    .att-btn {
+      padding: 4px 12px; border-radius: var(--radius-full); font-size: var(--font-size-xs); font-weight: 700;
+      border: 1.5px solid var(--color-border); background: white; cursor: pointer;
+    }
+    .att-btn.present { background: var(--color-success-light); color: var(--color-success); border-color: var(--color-success); }
+    .att-btn.absent  { background: var(--color-error-light);   color: var(--color-error);   border-color: var(--color-error);   }
+    .att-btn.late    { background: var(--color-warning-light);  color: var(--color-warning);  border-color: var(--color-warning);  }
+
+    /* Profile */
+    .profile-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-6); margin-bottom: var(--space-4); }
+    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #d4ede0; border: 3px solid #2d6a4a; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #1a3a2a; margin: 0 auto var(--space-4); }
+    .profile-name { font-size: var(--font-size-xl); font-weight: 700; text-align: center; margin-bottom: 4px; }
+    .profile-role { font-size: var(--font-size-xs); color: var(--color-text-muted); text-align: center; margin-bottom: var(--space-4); }
+    .profile-detail-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-light); font-size: var(--font-size-sm); }
+    .profile-detail-row:last-child { border-bottom: none; }
+    .profile-detail-label { color: var(--color-text-muted); font-weight: 500; }
+    .profile-detail-value { font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div id="app-header"></div>
+
+  <div class="welcome-strip">
+    <div class="container">
+      <div class="welcome-greeting" id="greeting">Good Morning 🌅</div>
+      <div class="welcome-name" id="user-name">Loading...</div>
+      <div class="welcome-meta" id="user-meta">School Of Science</div>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value" id="stat-hw">—</div>
+        <div class="stat-label">My HW Posts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="stat-students">—</div>
+        <div class="stat-label">Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📢</div>
+        <div class="stat-value" id="stat-notices">—</div>
+        <div class="stat-label">Notices</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-header">
+      <div class="section-title">Quick <span>Actions</span></div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="action-card" onclick="showTab('upload-hw')">
+        <div class="action-icon">📤</div>
+        <div class="action-title">Upload Homework</div>
+      </button>
+      <button class="action-card" onclick="showTab('attendance')">
+        <div class="action-icon">✅</div>
+        <div class="action-title">Mark Attendance</div>
+      </button>
+      <button class="action-card" onclick="showTab('students')">
+        <div class="action-icon">👥</div>
+        <div class="action-title">Student List</div>
+      </button>
+      <button class="action-card" onclick="showTab('add-student')">
+        <div class="action-icon">➕</div>
+        <div class="action-title">Add Student</div>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="dashboard-tabs">
+      <button class="dash-tab active" data-tab="upload-hw" onclick="showTab('upload-hw')">📤 Homework</button>
+      <button class="dash-tab" data-tab="attendance" onclick="showTab('attendance')">✅ Attendance</button>
+      <button class="dash-tab" data-tab="students" onclick="showTab('students')">👥 My Students</button>
+      <button class="dash-tab" data-tab="add-student" onclick="showTab('add-student')">➕ Add Student</button>
+      <button class="dash-tab" data-tab="results" onclick="showTab('results')">📊 Results</button>
+      <button class="dash-tab" data-tab="notices" onclick="showTab('notices')">📢 Notices</button>
+      <button class="dash-tab" data-tab="profile" onclick="showTab('profile')">👤 Profile</button>
+    </div>
+
+    <!-- Upload Homework Tab -->
+    <div class="tab-content active" id="tab-upload-hw">
+      <div class="upload-card">
+        <h3>📤 Upload Homework</h3>
+        <form id="hw-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="hw-title">Title *</label>
+            <input type="text" id="hw-title" class="form-control" placeholder="e.g. Chapter 5 Questions" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hw-subject">Subject *</label>
+            <input type="text" id="hw-subject" class="form-control" placeholder="e.g. Mathematics" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hw-class">Class *</label>
+            <select id="hw-class" class="form-control" required>
+              <option value="">Select Class</option>
+              <option value="1">Class 1</option><option value="2">Class 2</option>
+              <option value="3">Class 3</option><option value="4">Class 4</option>
+              <option value="5">Class 5</option><option value="6">Class 6</option>
+              <option value="7">Class 7</option><option value="8">Class 8</option>
+              <option value="9">Class 9</option><option value="10">Class 10</option>
+              <option value="11">Class 11</option><option value="12">Class 12</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hw-due">Due Date *</label>
+            <input type="date" id="hw-due" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hw-desc">Description *</label>
+            <textarea id="hw-desc" class="form-control" rows="3" placeholder="Write homework instructions..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hw-file">Attachment (optional)</label>
+            <input type="file" id="hw-file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="hw-submit-btn">Post Homework</button>
+        </form>
+      </div>
+
+      <!-- My Posted Homework -->
+      <div class="section-header"><div class="section-title">My Posted <span>Homework</span></div></div>
+      <div id="my-homework-list">
+        <div class="skeleton" style="height:60px;border-radius:var(--radius-xl);margin-bottom:8px;"></div>
+      </div>
+    </div>
+
+    <!-- Attendance Tab -->
+    <div class="tab-content" id="tab-attendance">
+      <div class="upload-card">
+        <h3>✅ Mark Attendance</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-5);">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="att-class">Class</label>
+            <select id="att-class" class="form-control">
+              <option value="">Select Class</option>
+              <option value="1">Class 1</option><option value="2">Class 2</option>
+              <option value="3">Class 3</option><option value="4">Class 4</option>
+              <option value="5">Class 5</option><option value="6">Class 6</option>
+              <option value="7">Class 7</option><option value="8">Class 8</option>
+              <option value="9">Class 9</option><option value="10">Class 10</option>
+              <option value="11">Class 11</option><option value="12">Class 12</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="att-date">Date</label>
+            <input type="date" id="att-date" class="form-control" />
+          </div>
+        </div>
+        <button class="btn btn-outline btn-block" id="load-students-btn" onclick="loadStudentsForAttendance()">
+          Load Students
+        </button>
+      </div>
+
+      <div id="attendance-list" style="display:none;">
+        <div class="upload-card">
+          <div id="student-attendance-rows"></div>
+          <button class="btn btn-primary btn-block" style="margin-top:var(--space-4);" id="submit-attendance-btn">
+            Submit Attendance
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student List Tab -->
+    <div class="tab-content" id="tab-students">
+      <div class="upload-card" style="padding-bottom:var(--space-3);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
+          <h3 style="margin:0;">👥 My Class Students</h3>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select id="student-class-filter" class="form-control" style="width:120px;min-height:36px;">
+              <option value="1">Class 1</option><option value="2">Class 2</option>
+              <option value="3">Class 3</option><option value="4">Class 4</option>
+              <option value="5">Class 5</option><option value="6">Class 6</option>
+              <option value="7">Class 7</option><option value="8">Class 8</option>
+              <option value="9">Class 9</option><option value="10">Class 10</option>
+              <option value="11">Class 11</option><option value="12">Class 12</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="showTab('add-student')">➕ Add Student</button>
+          </div>
+        </div>
+        <div id="students-list">
+          <div class="skeleton" style="height:50px;margin-bottom:8px;"></div>
+          <div class="skeleton" style="height:50px;margin-bottom:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Student Tab -->
+    <div class="tab-content" id="tab-add-student">
+      <div class="upload-card">
+        <h3>➕ Add New Student to My Class</h3>
+        <form id="teacher-add-student-form" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+            <div class="form-group">
+              <label class="form-label">Student Name *</label>
+              <input type="text" id="ts-name" class="form-control" placeholder="Student ka poora naam" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Class *</label>
+              <select id="ts-class" class="form-control" required>
+                <option value="">Select Class</option>
+                <option value="1">Class 1</option><option value="2">Class 2</option>
+                <option value="3">Class 3</option><option value="4">Class 4</option>
+                <option value="5">Class 5</option><option value="6">Class 6</option>
+                <option value="7">Class 7</option><option value="8">Class 8</option>
+                <option value="9">Class 9</option><option value="10">Class 10</option>
+                <option value="11">Class 11</option><option value="12">Class 12</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+            <div class="form-group">
+              <label class="form-label">Roll Number *</label>
+              <input type="text" id="ts-roll" class="form-control" placeholder="e.g. 101" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile (Parent) *</label>
+              <input type="tel" id="ts-phone" class="form-control" placeholder="+91 XXXXXXXXXX" required />
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+            <div class="form-group">
+              <label class="form-label">Father's Name</label>
+              <input type="text" id="ts-father" class="form-control" placeholder="Pita ka naam" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mother's Name</label>
+              <input type="text" id="ts-mother" class="form-control" placeholder="Mata ka naam" />
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" id="ts-dob" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select id="ts-gender" class="form-control">
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input type="text" id="ts-address" class="form-control" placeholder="Ghar ka address" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Student Photo (Optional)</label>
+            <input type="file" id="ts-photo" class="form-control" accept="image/*" />
+          </div>
+          <hr style="margin:var(--space-4) 0;border:1px solid var(--color-border);" />
+          <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:var(--space-3);">
+            🔐 Student login credentials (school portal ke liye)
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+            <div class="form-group">
+              <label class="form-label">Username *</label>
+              <input type="text" id="ts-username" class="form-control" placeholder="e.g. stu_101" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password *</label>
+              <input type="text" id="ts-password" class="form-control" placeholder="Min 6 chars" required />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="teacher-add-student-btn">✅ Add Student to Class</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload Results Tab -->
+    <div class="tab-content" id="tab-results">
+      <div class="upload-card">
+        <h3>📊 Upload Result</h3>
+        <form id="result-form">
+          <div class="form-group">
+            <label class="form-label" for="res-student">Select Student *</label>
+            <select id="res-student" class="form-control" required>
+              <option value="">Select Student</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="res-exam">Exam Type *</label>
+            <select id="res-exam" class="form-control" required>
+              <option value="">Select exam type</option>
+              <option>Unit Test 1</option>
+              <option>Unit Test 2</option>
+              <option>Half Yearly</option>
+              <option>Annual</option>
+              <option>Pre-Board</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600; margin-bottom: var(--space-2); display: block;">UP Board Subjects Marks (Max: 100)</label>
+            <div id="up-board-subjects-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-top: var(--space-2);">
+              <!-- Dynamic subject inputs will be inserted here based on class -->
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="result-submit-btn" style="margin-top: var(--space-4);">Upload Result</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Notices Tab -->
+    <div class="tab-content" id="tab-notices">
+      <div class="upload-card">
+        <h3>📢 Post a Notice</h3>
+        <form id="notice-form">
+          <div class="form-group">
+            <label class="form-label" for="not-title">Title *</label>
+            <input type="text" id="not-title" class="form-control" placeholder="Notice title" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="not-audience">For</label>
+            <select id="not-audience" class="form-control">
+              <option value="All">All</option>
+              <option value="Students">Students only</option>
+              <option value="Teachers">Teachers only</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="not-content">Content *</label>
+            <textarea id="not-content" class="form-control" rows="3" placeholder="Notice content..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="notice-submit-btn">Post Notice</button>
+        </form>
+      </div>
+      <div id="notices-list">
+        <div class="skeleton" style="height:70px;border-radius:var(--radius-xl);margin-bottom:8px;"></div>
+      </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div class="tab-content" id="tab-profile">
+      <div class="profile-card">
+        <div class="profile-avatar" id="profile-avatar">👤</div>
+        <div class="profile-name" id="profile-name">—</div>
+        <div class="profile-role">Teacher</div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Username</span>
+          <span class="profile-detail-value" id="pf-username">—</span>
+        </div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Subject</span>
+          <span class="profile-detail-value" id="pf-subject">—</span>
+        </div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Qualification</span>
+          <span class="profile-detail-value" id="pf-qual">—</span>
+        </div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Phone</span>
+          <span class="profile-detail-value" id="pf-phone">—</span>
+        </div>
+      </div>
+      <button class="btn btn-danger btn-block" id="logout-btn" onclick="doLogout()">🚪 Logout</button>
+    </div>
+
+  </div>
+
+  <div id="bottom-nav"></div>
+
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/components.js"></script>
+  <script src="dashboard.js?v=2"></script>
+  <script>
+    Components.renderHeader();
+    Components.renderBottomNav('profile');
+  </script>
+</body>
+</html>

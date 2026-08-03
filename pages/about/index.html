@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="description" content="About School Of Science – History, Vision, Mission and Principal's Message by Shri Ramakant Pandey." />
+  <title>About School | School Of Science</title>
+  <link rel="stylesheet" href="../../assets/css/design-system.css" />
+  <style>
+    .about-hero {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #2d4faa 100%);
+      padding: var(--space-10) var(--container-pad);
+      text-align: center;
+      color: var(--color-white);
+    }
+
+    .about-hero-icon {
+      font-size: 64px;
+      margin-bottom: var(--space-4);
+    }
+
+    .about-hero h1 {
+      font-size: var(--font-size-2xl);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: var(--space-2);
+    }
+
+    .about-hero p {
+      font-size: var(--font-size-sm);
+      opacity: 0.85;
+    }
+
+    .about-section {
+      background: var(--color-white);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      padding: var(--space-6);
+      margin-bottom: var(--space-4);
+    }
+
+    .about-section-icon {
+      font-size: 32px;
+      margin-bottom: var(--space-3);
+    }
+
+    .about-section h2 {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .about-section p {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.8;
+    }
+
+    /* Principal's message card */
+    .principal-card {
+      background: var(--color-white);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-6);
+      margin-bottom: var(--space-4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .principal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--color-accent);
+    }
+
+    .principal-avatar {
+      width: 120px;
+      height: 140px;
+      border-radius: var(--radius-md);
+      background: var(--color-accent-light);
+      border: 3px solid var(--color-accent);
+      overflow: hidden;
+      margin-bottom: var(--space-4);
+    }
+
+    .principal-name {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 2px;
+    }
+
+    .principal-title {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      font-weight: 500;
+      margin-bottom: var(--space-4);
+    }
+
+    .principal-message {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.8;
+      font-style: italic;
+      border-left: 3px solid var(--color-accent);
+      padding-left: var(--space-4);
+    }
+
+    /* Vision/Mission cards */
+    .vm-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+
+    .vm-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      text-align: center;
+    }
+
+    .vm-card-icon {
+      font-size: 36px;
+      margin-bottom: var(--space-3);
+    }
+
+    .vm-card-title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .vm-card-text {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Timeline for history */
+    .timeline {
+      position: relative;
+      padding-left: var(--space-8);
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-accent);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-5);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-8) + 10px);
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 2px solid var(--color-accent);
+    }
+
+    .timeline-year {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      color: var(--color-primary);
+      background: var(--color-accent-light);
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-2);
+    }
+
+    .timeline-text {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-header"></div>
+
+  <!-- Principal's Message -->
+  <div class="page-content">
+
+    <div class="principal-card">
+      <div class="principal-avatar">
+        <img src="../../assets/principal.png" alt="Shri Ramakant Pandey" style="width: 100%; height: 100%; object-fit: cover; object-position: top;" onerror="this.outerHTML='👨‍💼';" />
+      </div>
+      <div class="principal-name">Shri Ramakant Pandey</div>
+      <div class="principal-title">Principal & Manager | M.Sc. (Mathematics)</div>
+      <div style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: var(--space-3); font-weight: 600;">Over 22+ Years of Academic Excellence & Teaching Experience</div>
+      <p class="principal-message">
+        "Welcome to School Of Science. For over 22 years, I have dedicated myself to teaching and empowering rural minds, especially in mathematics and logical reasoning. As the Principal and Manager, my goal is to provide top-quality, affordable education from LKG to Class 12. We believe that with the right guidance, every rural child can compete with the best in the nation. Our school is committed to nurturing academic success, strong character, and a scientific temper in every single student."
+      </p>
+    </div>
+
+    <!-- Vision & Mission -->
+    <div class="vm-grid">
+      <div class="vm-card">
+        <div class="vm-card-icon">🎯</div>
+        <div class="vm-card-title">Our Vision</div>
+        <div class="vm-card-text">
+          To be the most trusted center of holistic education in rural India, nurturing future leaders.
+        </div>
+      </div>
+      <div class="vm-card">
+        <div class="vm-card-icon">🌱</div>
+        <div class="vm-card-title">Our Mission</div>
+        <div class="vm-card-text">
+          Providing quality, affordable education with strong values, modern technology, and dedicated teachers.
+        </div>
+      </div>
+    </div>
+
+    <!-- About School -->
+    <div class="about-section">
+      <div class="about-section-icon">🏫</div>
+      <h2>About Our School</h2>
+      <p>
+        School Of Science was founded with the sole purpose of bringing quality education to the
+        doorstep of every rural family. Located in the heart of our community, we serve students
+        from Classes LKG to 12, offering comprehensive schooling with a strong foundation in science, mathematics, and arts.
+        <br/><br/>
+        Under the visionary leadership of Shri Ramakant Pandey (M.Sc. Mathematics), our school has built a strong reputation over the last two decades. We are equipped with modern laboratories, a digital library, 24x7 CCTV security, school van transport, and a highly dedicated faculty team committed to nurturing the academic and personal growth of every student.
+      </p>
+    </div>
+
+    <!-- School History -->
+    <div class="about-section">
+      <div class="about-section-icon">📜</div>
+      <h2>Our History</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2005</div>
+          <div class="timeline-text">Started coaching classes for Class 9 and Class 10 students.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2014</div>
+          <div class="timeline-text">Established School Of Science, starting classes from Class 6 to Class 10.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2020</div>
+          <div class="timeline-text">Expanded the school structure to senior secondary levels, serving Classes 6 to 12.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2023</div>
+          <div class="timeline-text">Fully expanded the school from LKG to Class 12, providing comprehensive education for all age groups.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Values -->
+    <div class="about-section">
+      <div class="about-section-icon">⭐</div>
+      <h2>Our Core Values</h2>
+      <p>
+        <strong>Integrity</strong> – We teach honesty and responsibility in everything we do.<br/><br/>
+        <strong>Excellence</strong> – We strive for the highest standards in academics and character.<br/><br/>
+        <strong>Inclusivity</strong> – Every child, regardless of background, deserves equal opportunity.<br/><br/>
+        <strong>Community</strong> – We grow together as a family of students, teachers, and parents.
+      </p>
+    </div>
+
+  </div>
+
+  <div id="bottom-nav"></div>
+
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/components.js"></script>
+  <script>
+    Components.renderHeader({ showBack: true, title: 'About School' });
+    Components.renderBottomNav('home');
+  </script>
+</body>
+</html>

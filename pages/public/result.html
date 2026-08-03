@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Results | School Of Science</title>
+  <link rel="stylesheet" href="../../assets/css/design-system.css" />
+  <style>
+    body {
+      background: var(--color-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .result-container {
+      max-width: 800px;
+      margin: var(--space-8) auto;
+      padding: 0 var(--container-pad);
+      flex: 1;
+      width: 100%;
+    }
+    
+    /* Search Form */
+    .search-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+      margin-bottom: var(--space-8);
+    }
+    .search-card h2 {
+      font-size: var(--font-size-2xl);
+      color: var(--color-primary);
+      margin-bottom: var(--space-2);
+      text-align: center;
+    }
+    .search-card p {
+      color: var(--color-text-secondary);
+      text-align: center;
+      margin-bottom: var(--space-6);
+    }
+    
+    /* Captcha block */
+    .captcha-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+      background: var(--color-accent-light);
+      padding: var(--space-3);
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--color-accent);
+    }
+    .captcha-equation {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: 2px;
+      flex-shrink: 0;
+    }
+    .captcha-input {
+      flex: 1;
+      font-size: var(--font-size-lg);
+      text-align: center;
+    }
+
+    /* Marksheet Layout */
+    .marksheet {
+      display: none;
+      background: #fff;
+      border: 8px double var(--color-primary);
+      padding: 40px;
+      position: relative;
+      color: #333;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: var(--radius-md);
+    }
+    /* Official watermark */
+    .marksheet::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%231e3a8a' stroke-width='2' stroke-dasharray='4 2' opacity='0.05'/%3E%3Cpath d='M50 20 L25 40 L50 60 L75 40 Z' fill='%231e3a8a' opacity='0.04'/%3E%3Cpath d='M35 50 L35 70 Q50 85 65 70 L65 50' stroke='%231e3a8a' stroke-width='2' opacity='0.04'/%3E%3C/svg%3E") no-repeat center;
+      background-size: 60% 60%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .marksheet-content {
+      position: relative;
+      z-index: 1;
+    }
+    .marksheet-header {
+      text-align: center;
+      border-bottom: 3px double var(--color-primary);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .marksheet-emblem {
+      margin-bottom: var(--space-2);
+    }
+    .marksheet-header h1 {
+      color: var(--color-primary);
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .marksheet-header h3 {
+      color: var(--color-text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .marksheet-header h4 {
+      color: #1e2f6e;
+      font-size: 16px;
+      font-weight: 700;
+      background: var(--color-accent-light);
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 20px;
+      border: 1px solid var(--color-accent);
+      margin-top: 10px;
+    }
+    .marksheet-sub-title {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-top: -5px;
+    }
+
+    .student-info {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+      border: 1px solid var(--color-border);
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: #fafafa;
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .info-table td {
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    .info-label {
+      font-weight: 700;
+      color: #444;
+      width: 140px;
+    }
+    .student-photo {
+      width: 110px;
+      height: 130px;
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: #eee;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .marks-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    .marks-table th, .marks-table td {
+      border: 1px solid #c8d2e6;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .marks-table th {
+      background: var(--color-primary);
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+    .marks-table td.subject-name {
+      text-align: left;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .marks-table tr:nth-child(even) {
+      background-color: #fcfdfe;
+    }
+    
+    .marksheet-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-accent-light);
+      padding: 15px 20px;
+      border: 2px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 50px;
+    }
+    .result-pass { color: var(--color-success); font-size: 20px; font-weight: 800; }
+    .result-fail { color: var(--color-error); font-size: 20px; font-weight: 800; }
+
+    .signatures {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 60px;
+      padding-top: 20px;
+    }
+    .sig-line {
+      border-top: 1px solid #666;
+      width: 220px;
+      text-align: center;
+      padding-top: 8px;
+      font-weight: 700;
+      color: var(--color-primary);
+      font-size: 13px;
+    }
+    .sig-title {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .print-btn-wrap {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    @media print {
+      body { background: white; }
+      .search-card, .print-btn-wrap, #app-header, #bottom-nav, .toast-container { display: none !important; }
+      .result-container { margin: 0; padding: 0; max-width: 100%; }
+      .marksheet { box-shadow: none; border: 8px double #1E3A8A !important; padding: 30px; }
+      .marksheet::before { opacity: 0.05 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-header"></div>
+
+  <div class="result-container">
+    
+    <!-- Search Form -->
+    <div class="search-card" id="search-section">
+      <h2>🏆 Online Result Portal</h2>
+      <p id="exam-status-text">Checking result status...</p>
+      
+      <form id="result-search-form" style="display:none;" onsubmit="fetchResult(event)">
+        <div class="form-group">
+          <label class="form-label">Roll Number</label>
+          <input type="text" id="roll-number" class="form-control" placeholder="Enter your roll number" required autocomplete="off" />
+        </div>
+        
+        <div class="captcha-wrap">
+          <div class="captcha-equation" id="captcha-display">5 + 7 = </div>
+          <input type="number" id="captcha-input" class="form-control captcha-input" placeholder="?" required autocomplete="off" />
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%;" id="search-btn">Check Result</button>
+      </form>
+    </div>
+
+    <!-- Marksheet -->
+    <div id="marksheet-section" style="display:none;">
+      <div class="marksheet" id="marksheet">
+        <div class="marksheet-content">
+          <div class="marksheet-header">
+            <!-- SVG Emblem -->
+            <div class="marksheet-emblem">
+              <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="#1E3A8A" stroke-width="4" fill="#FFF8E1"/>
+                <path d="M50 20 L25 40 L50 60 L75 40 Z" fill="#1E3A8A"/>
+                <path d="M35 50 L35 70 Q50 82 65 70 L65 50" stroke="#1E3A8A" stroke-width="3" fill="none"/>
+                <circle cx="50" cy="40" r="6" fill="#F7C948"/>
+              </svg>
+            </div>
+            <h1>School Of Science</h1>
+            <h3>Rural India's Finest School</h3>
+            <div class="marksheet-sub-title">Affiliated to Board of High School & Intermediate Education, U.P.</div>
+            <h4 id="ms-exam-name">Annual Examination 2024</h4>
+          </div>
+          
+          <div class="student-info">
+            <table class="info-table">
+              <tr>
+                <td class="info-label">Student Name</td>
+                <td id="ms-name">: John Doe</td>
+              </tr>
+              <tr>
+                <td class="info-label">Father's Name</td>
+                <td id="ms-father">: Richard Doe</td>
+              </tr>
+              <tr>
+                <td class="info-label">Class</td>
+                <td id="ms-class">: 10th</td>
+              </tr>
+              <tr>
+                <td class="info-label">Roll Number</td>
+                <td id="ms-roll">: 100123</td>
+              </tr>
+              <tr>
+                <td class="info-label">Date of Birth</td>
+                <td id="ms-dob">: 15 Aug 2008</td>
+              </tr>
+            </table>
+          </div>
+
+          <table class="marks-table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Max Marks</th>
+                <th>Marks Obtained</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <tbody id="ms-marks-body">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+
+          <div class="marksheet-summary">
+            <div>Total Marks: <span id="ms-total-marks" style="color:var(--color-primary)">0</span> / <span id="ms-total-max">0</span></div>
+            <div>Percentage: <span id="ms-percentage" style="color:var(--color-primary)">0%</span></div>
+            <div id="ms-final-result" class="result-pass">PASS</div>
+          </div>
+
+          <div class="signatures">
+            <div class="sig-line">
+              Class Teacher Signature
+              <div class="sig-title">School Of Science</div>
+            </div>
+            <div class="sig-line">
+              Principal & Director
+              <div class="sig-title">Shri Ramakant Pandey</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="print-btn-wrap">
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Download Marksheet (PDF)</button>
+        <button class="btn btn-outline" onclick="resetSearch()" style="margin-left:10px;">Search Another</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="bottom-nav"></div>
+
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/components.js"></script>
+  <script src="result.js"></script>
+  <script>
+    Components.renderHeader();
+  </script>
+</body>
+</html>

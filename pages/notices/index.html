@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Notices | School Of Science</title>
+  <link rel="stylesheet" href="../../assets/css/design-system.css" />
+  <style>
+    .notice-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      margin-bottom: var(--space-3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .notice-card.pinned {
+      border-color: var(--color-accent);
+    }
+
+    .notice-card.pinned::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--color-accent);
+    }
+
+    .notice-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
+
+    .notice-pin-badge {
+      background: var(--color-accent);
+      color: var(--color-primary);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .notice-audience {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      background: var(--color-bg);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    .notice-title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .notice-content {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      margin-bottom: var(--space-3);
+    }
+
+    .notice-date {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-header"></div>
+
+  <div class="page-content">
+    <div class="section-header">
+      <div class="section-title">📢 <span>Notice Board</span></div>
+    </div>
+
+    <div id="notices-list">
+      <!-- Loaded by JS -->
+    </div>
+  </div>
+
+  <div id="bottom-nav"></div>
+
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/components.js"></script>
+  <script src="notices.js"></script>
+  <script>
+    Components.renderHeader({ showBack: true, title: 'Notice Board' });
+    Components.renderBottomNav('notices');
+  </script>
+</body>
+</html>

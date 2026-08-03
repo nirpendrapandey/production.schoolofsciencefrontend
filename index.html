@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="description" content="School Of Science – A premier rural school in India. Student & Teacher Portal, Homework, Results, Gallery and more." />
+  <meta name="theme-color" content="#1E3A8A" />
+  <title>School Of Science | Education for Every Child</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="assets/css/design-system.css" />
+  <style>
+    /* ── Homepage-specific styles ── */
+    .hero-strip {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #2d4faa 100%);
+      padding: var(--space-6) var(--container-pad);
+      text-align: center;
+    }
+
+    .hero-strip h1 {
+      font-size: var(--font-size-2xl);
+      font-weight: 800;
+      color: var(--color-white);
+      line-height: 1.2;
+      margin-bottom: var(--space-1);
+    }
+
+    .hero-strip p {
+      font-size: var(--font-size-sm);
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-accent);
+      color: var(--color-primary);
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      margin-bottom: var(--space-3);
+    }
+
+    /* ── Notice ticker ── */
+    .notice-ticker {
+      background: var(--color-accent-light);
+      border-bottom: 1px solid var(--color-accent);
+      padding: var(--space-2) var(--container-pad);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      overflow: hidden;
+    }
+
+    .notice-ticker-label {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      color: var(--color-primary);
+      white-space: nowrap;
+      background: var(--color-accent);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .notice-ticker-wrapper {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .notice-ticker-text {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+      animation: ticker-scroll 25s linear infinite;
+      font-weight: 500;
+      display: inline-block;
+      padding-left: 100%;
+    }
+
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ── Navigation cards ── */
+    .cards-section {
+      padding: var(--space-5) var(--container-pad);
+      max-width: var(--max-width-mobile);
+      margin: 0 auto;
+    }
+
+    .cards-section-title {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-4);
+    }
+
+    .nav-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    /* ── Quick info footer strip ── */
+    .info-strip {
+      margin: var(--space-5) var(--container-pad);
+      max-width: var(--max-width-mobile);
+      margin-left: auto;
+      margin-right: auto;
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      text-align: center;
+    }
+
+    .info-strip-item .value {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+
+    .info-strip-item .label {
+      font-size: 10px;
+      color: var(--color-text-muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header (injected by components.js) -->
+  <div id="app-header"></div>
+
+  <!-- Notice Ticker -->
+  <div class="notice-ticker">
+    <span class="notice-ticker-label">📢 NOTICE</span>
+    <div class="notice-ticker-wrapper">
+      <span class="notice-ticker-text" id="ticker-text">
+        Welcome to School of Science! Annual Sports Day on 15 Aug 2026 (Saturday) &nbsp;•&nbsp;
+        New session begins 1 April &nbsp;•&nbsp; PTM on every last Saturday
+      </span>
+    </div>
+  </div>
+
+  <!-- Hero Strip -->
+  <div class="hero-strip">
+    <div class="hero-badge">🎓 Rural India's Finest School</div>
+    <h1>School Of Science</h1>
+    <p>Empowering Minds, Shaping Futures</p>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="info-strip" style="margin-top: var(--space-5);">
+    <div class="info-strip-item">
+      <div class="value">800+</div>
+      <div class="label">Students</div>
+    </div>
+    <div class="info-strip-item">
+      <div class="value">15+</div>
+      <div class="label">Teachers</div>
+    </div>
+    <div class="info-strip-item">
+      <div class="value">99%+</div>
+      <div class="label">Success Rate</div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Cards -->
+  <section class="cards-section" aria-label="Quick navigation">
+    <div class="cards-section-title">Quick Access</div>
+
+    <div class="nav-cards-list" id="nav-cards">
+
+      <!-- 1. Student Login -->
+      <a href="pages/student/login.html" class="nav-card" id="card-student-login">
+        <div class="nav-card-icon-wrap">🎒</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Student Login</div>
+          <div class="nav-card-desc">View homework, results & attendance</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 2. Teacher Login -->
+      <a href="pages/teacher/login.html" class="nav-card" id="card-teacher-login">
+        <div class="nav-card-icon-wrap">👨‍🏫</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Teacher Login</div>
+          <div class="nav-card-desc">Upload homework, mark attendance</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 2.5 Admin Login -->
+      <a href="pages/admin/login.html" class="nav-card" id="card-admin-login">
+        <div class="nav-card-icon-wrap">👑</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Admin Login</div>
+          <div class="nav-card-desc">Manage school, teachers & fees</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 2.75 Check Results -->
+      <a href="pages/public/result.html" class="nav-card" id="card-results">
+        <div class="nav-card-icon-wrap">🏆</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Check Results</div>
+          <div class="nav-card-desc">View and download your exam mark sheet</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 2.8 Notice Board -->
+      <a href="pages/notices/index.html" class="nav-card" id="card-notices">
+        <div class="nav-card-icon-wrap">📢</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Notice Board</div>
+          <div class="nav-card-desc">Latest announcements & school news</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 2.9 Download Admit Card -->
+      <a href="pages/student/login.html" class="nav-card" id="card-admit-card">
+        <div class="nav-card-icon-wrap">🎫</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Download Admit Card</div>
+          <div class="nav-card-desc">Get your exam hall ticket & admit card</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 4. About School -->
+      <a href="pages/about/index.html" class="nav-card" id="card-about">
+        <div class="nav-card-icon-wrap">🏫</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">About School</div>
+          <div class="nav-card-desc">History, vision, mission & principal's message</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 5. Faculty -->
+      <a href="pages/faculty/index.html" class="nav-card" id="card-faculty">
+        <div class="nav-card-icon-wrap">👩‍🏫</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Faculty</div>
+          <div class="nav-card-desc">Meet our dedicated teaching staff</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 6. Facilities -->
+      <a href="pages/facilities/index.html" class="nav-card" id="card-facilities">
+        <div class="nav-card-icon-wrap">🔬</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Facilities</div>
+          <div class="nav-card-desc">Library, labs, smart classrooms & more</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 7. Gallery -->
+      <a href="pages/gallery/index.html" class="nav-card" id="card-gallery">
+        <div class="nav-card-icon-wrap">🖼️</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Gallery</div>
+          <div class="nav-card-desc">Photos from events & school life</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 7.5 Admission Inquiry -->
+      <a href="pages/contact/index.html" class="nav-card" id="card-admissions">
+        <div class="nav-card-icon-wrap">📝</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Admission Inquiry</div>
+          <div class="nav-card-desc">Apply online & view admission process</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+      <!-- 8. Contact Us -->
+      <a href="pages/contact/index.html" class="nav-card" id="card-contact">
+        <div class="nav-card-icon-wrap">📞</div>
+        <div class="nav-card-info">
+          <div class="nav-card-title">Contact Us</div>
+          <div class="nav-card-desc">Get in touch with the school</div>
+        </div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Footer note -->
+  <div style="text-align:center; padding: var(--space-6) var(--container-pad); color: var(--color-text-muted); font-size: var(--font-size-xs); padding-bottom: calc(var(--bottom-nav-height) + 20px);">
+    © 2024 School Of Science. All rights reserved.<br/>
+    <span style="color:var(--color-primary); font-weight:600;">Principal: Shri Ramakant Pandey</span>
+  </div>
+
+  <!-- Bottom Navigation (injected by components.js) -->
+  <div id="bottom-nav"></div>
+
+  <!-- Scripts -->
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script>
+    // Initialize shared components
+    Components.renderHeader();
+    Components.renderBottomNav('home');
+
+    // If user is already logged in, update Student/Teacher Login cards
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Auth.getUser();
+      if (user) {
+        if (user.role === 'student') {
+          const card = document.getElementById('card-student-login');
+          if (card) {
+            card.href = 'pages/student/dashboard.html';
+            card.querySelector('.nav-card-title').textContent = 'My Dashboard';
+            card.querySelector('.nav-card-desc').textContent = `Welcome back, ${user.name.split(' ')[0]}!`;
+          }
+        } else if (user.role === 'teacher') {
+          const card = document.getElementById('card-teacher-login');
+          if (card) {
+            card.href = 'pages/teacher/dashboard.html';
+            card.querySelector('.nav-card-title').textContent = 'Teacher Dashboard';
+            card.querySelector('.nav-card-desc').textContent = `Welcome, ${user.name.split(' ')[0]}!`;
+          }
+        }
+      }
+
+      // Fetch live notices for ticker
+      fetch('http://localhost:5000/api/v1/notices?isPinned=true')
+        .then(r => r.json())
+        .then(res => {
+          if (res.success && res.data.length > 0) {
+            const texts = res.data.map(n => n.title).join(' &nbsp;•&nbsp; ');
+            document.getElementById('ticker-text').innerHTML = texts;
+          }
+        })
+        .catch(() => {}); // fail silently – ticker has default text
+    });
+  </script>
+</body>
+</html>

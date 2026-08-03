@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="description" content="Homework Board – School Of Science. View class assignments and due dates." />
+  <title>Homework | School Of Science</title>
+  <link rel="stylesheet" href="../../assets/css/design-system.css" />
+  <style>
+    .class-filter {
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      padding-bottom: var(--space-2);
+      scrollbar-width: none;
+      margin-bottom: var(--space-5);
+    }
+    .class-filter::-webkit-scrollbar { display: none; }
+
+    .class-chip {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      border: 1.5px solid var(--color-border);
+      background: var(--color-white);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition-fast);
+    }
+    .class-chip.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+    .hw-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      margin-bottom: var(--space-3);
+    }
+
+    .hw-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+
+    .hw-subject-badge {
+      background: var(--color-accent-light);
+      color: var(--color-primary);
+      border: 1px solid var(--color-accent);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+    }
+
+    .hw-class-badge {
+      background: rgba(30,58,138,0.08);
+      color: var(--color-primary);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+    }
+
+    .hw-title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .hw-desc {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--space-3);
+    }
+
+    .hw-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .hw-teacher {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+    }
+
+    .hw-attachment {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--font-size-xs);
+      color: var(--color-primary);
+      font-weight: 600;
+      background: rgba(30,58,138,0.06);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-header"></div>
+
+  <div class="page-content">
+
+    <!-- Class filter chips -->
+    <div class="class-filter" id="class-filter">
+      <button class="class-chip active" data-class="All" id="chip-all">All Classes</button>
+      <button class="class-chip" data-class="1">Class 1</button>
+      <button class="class-chip" data-class="2">Class 2</button>
+      <button class="class-chip" data-class="3">Class 3</button>
+      <button class="class-chip" data-class="4">Class 4</button>
+      <button class="class-chip" data-class="5">Class 5</button>
+      <button class="class-chip" data-class="6">Class 6</button>
+      <button class="class-chip" data-class="7">Class 7</button>
+      <button class="class-chip" data-class="8">Class 8</button>
+      <button class="class-chip" data-class="9">Class 9</button>
+      <button class="class-chip" data-class="10">Class 10</button>
+      <button class="class-chip" data-class="11">Class 11</button>
+      <button class="class-chip" data-class="12">Class 12</button>
+    </div>
+
+    <div id="homework-list">
+      <!-- Loaded by JS -->
+    </div>
+  </div>
+
+  <div id="bottom-nav"></div>
+
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/components.js"></script>
+  <script src="homework.js"></script>
+  <script>
+    Components.renderHeader({ showBack: true, title: 'Homework' });
+    Components.renderBottomNav('homework');
+  </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="description" content="School Of Science Faculty – Meet our dedicated teaching staff." />
+  <title>Faculty | School Of Science</title>
+  <link rel="stylesheet" href="../../assets/css/design-system.css" />
+  <style>
+    .faculty-grid {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .faculty-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-5);
+    }
+
+    .faculty-photo-wrap {
+      flex-shrink: 0;
+    }
+
+    .faculty-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--color-accent-light);
+      border: 2px solid var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-primary);
+      overflow: hidden;
+    }
+
+    .faculty-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .faculty-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .faculty-name {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 2px;
+    }
+
+    .faculty-subject {
+      font-size: var(--font-size-sm);
+      color: var(--color-primary);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .faculty-qual {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+    }
+
+    /* Skeleton loader */
+    .faculty-skeleton {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      background: var(--color-white);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-header"></div>
+
+  <div class="page-content">
+    <div class="section-header">
+      <div class="section-title">Our <span>Faculty Quality</span></div>
+    </div>
+
+    <div class="about-section" style="margin-bottom:var(--space-5);">
+      <div class="about-section-icon">👩‍🏫</div>
+      <h2>Exceptional Standards of Teaching</h2>
+      <p>
+        At School Of Science, we believe that teachers are the architects of a child's future. For privacy and security reasons, we do not list individual staff profiles publicly. Instead, we strictly document and maintain the highest benchmarks for our educational faculty.
+      </p>
+    </div>
+
+    <div class="section-title" style="font-size:var(--font-size-sm);font-weight:700;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-4);">Key Qualities of Our Teachers</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+      <div class="card" style="text-align:left;display:flex;gap:16px;align-items:flex-start;padding:16px;background:white;border:1px solid var(--color-border);border-radius:var(--radius-xl);">
+        <span style="font-size:24px;background:var(--color-accent-light);padding:8px;border-radius:8px;">🎓</span>
+        <div>
+          <h3 style="font-size:14px;color:var(--color-primary);font-weight:700;margin-bottom:4px;">Highly Qualified & Certified</h3>
+          <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">100% of our teachers hold Post-Graduate degrees (M.Sc., M.A.) and professional education certificates (B.Ed., M.Ed., D.El.Ed.) from recognized national universities.</p>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:left;display:flex;gap:16px;align-items:flex-start;padding:16px;background:white;border:1px solid var(--color-border);border-radius:var(--radius-xl);">
+        <span style="font-size:24px;background:var(--color-accent-light);padding:8px;border-radius:8px;">⏳</span>
+        <div>
+          <h3 style="font-size:14px;color:var(--color-primary);font-weight:700;margin-bottom:4px;">Rich Pedagogical Experience</h3>
+          <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Our faculty has an average teaching experience of over 10+ years, combining experienced maturity with modern innovative teaching methodologies.</p>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:left;display:flex;gap:16px;align-items:flex-start;padding:16px;background:white;border:1px solid var(--color-border);border-radius:var(--radius-xl);">
+        <span style="font-size:24px;background:var(--color-accent-light);padding:8px;border-radius:8px;">🎯</span>
+        <div>
+          <h3 style="font-size:14px;color:var(--color-primary);font-weight:700;margin-bottom:4px;">Student-Centric Approach</h3>
+          <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Maintaining an optimal 1:30 student-teacher ratio to ensure personalized guidance, continuous mentoring, and individual assessment for every student.</p>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:left;display:flex;gap:16px;align-items:flex-start;padding:16px;background:white;border:1px solid var(--color-border);border-radius:var(--radius-xl);">
+        <span style="font-size:24px;background:var(--color-accent-light);padding:8px;border-radius:8px;">📚</span>
+        <div>
+          <h3 style="font-size:14px;color:var(--color-primary);font-weight:700;margin-bottom:4px;">Continuous Training & Workshops</h3>
+          <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Our teachers regularly participate in pedagogical training, learning assessment methods, and modern classroom management strategies to improve student learning outcomes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="font-size:var(--font-size-sm);font-weight:700;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-4);">Our Department Panels</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:30px;">
+      <div class="about-section" style="padding:16px;margin:0;">
+        <span style="background:var(--color-primary);color:white;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:700;text-transform:uppercase;">Math & Science Panel</span>
+        <h3 style="font-size:15px;color:var(--color-primary);margin-top:8px;margin-bottom:4px;">Expert Foundation Builders</h3>
+        <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;">Our math and science departments focus on practical application, board exam preparations, and core logical understanding, heavily overseen by M.Sc. qualified subject experts.</p>
+      </div>
+
+      <div class="about-section" style="padding:16px;margin:0;">
+        <span style="background:var(--color-primary);color:white;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:700;text-transform:uppercase;">Languages & Arts Panel</span>
+        <h3 style="font-size:15px;color:var(--color-primary);margin-top:8px;margin-bottom:4px;">Language Command & Culture</h3>
+        <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;">Focusing on strong communication skills in English and Hindi, writing standards, creative arts, and nurturing character values in students.</p>
+      </div>
+
+      <div class="about-section" style="padding:16px;margin:0;">
+        <span style="background:var(--color-primary);color:white;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:700;text-transform:uppercase;">Early Education Specialists</span>
+        <h3 style="font-size:15px;color:var(--color-primary);margin-top:8px;margin-bottom:4px;">LKG & Primary Mentors</h3>
+        <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;">Our primary teachers are specifically certified and trained in early childhood education, child psychology, and activity-based learning to make schooling joyful for kids.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="bottom-nav"></div>
+
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/components.js"></script>
+  <script>
+    Components.renderHeader({ showBack: true, title: 'Faculty Quality' });
+    Components.renderBottomNav('home');
+  </script>
+</body>
+</html>
