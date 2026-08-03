@@ -3,7 +3,7 @@
  * Central API client – wraps fetch, injects auth token, handles 401 auto-logout.
  */
 
-const API_BASE = 'http://127.0.0.1:5000/api/v1';
+const API_BASE = 'https://production-schoolofscience-backend.onrender.com/api/v1';
 
 /**
  * Core request wrapper.

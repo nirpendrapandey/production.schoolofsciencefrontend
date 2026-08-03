@@ -131,7 +131,7 @@ const Utils = {
   resolveUrl(path) {
     if (!path) return null;
     if (path.startsWith('http') || path.startsWith('.') || path.startsWith('/assets') || path.startsWith('assets')) return path;
-    return `http://localhost:5000${path}`;
+    return `https://production-schoolofscience-backend.onrender.com${path}`;
   },
 
   /**
