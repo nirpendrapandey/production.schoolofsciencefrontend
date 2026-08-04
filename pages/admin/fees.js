@@ -82,16 +82,20 @@ async function searchStudent() {
   btn.disabled = true;
 
   try {
-    const res = await API.get(`/fees/student-by-roll?roll=${encodeURIComponent(roll)}`);
-
-    if (!res.success) {
-      showToast(res.message || 'Student nahi mila', 'error');
+    const res = await API.get(`/students/search?q=${encodeURIComponent(roll)}`);
+    if (!res.success || !res.data || res.data.length === 0) {
+      showToast('Student nahi mila', 'error');
       hideStudentUI();
       return;
     }
-
-    currentStudent = res.data.student;
-    currentFees    = res.data.fees || [];
+    
+    // Try to find exact roll match, otherwise pick first
+    let student = res.data.find(s => String(s.roll_number) === String(roll)) || res.data[0];
+    
+    const feeRes = await API.get(`/fees?student=${student.id}`);
+    
+    currentStudent = student;
+    currentFees    = feeRes.success ? feeRes.data : [];
 
     showStudentCard(currentStudent);
     renderMonths();
@@ -105,9 +109,21 @@ async function searchStudent() {
   }
 }
 
-// Allow Enter key
-document.getElementById('roll-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') searchStudent();
+// Allow Enter key and Auto-search (debounce)
+let searchTimeout = null;
+document.getElementById('roll-input').addEventListener('keyup', e => {
+  if (e.key === 'Enter') {
+    clearTimeout(searchTimeout);
+    searchStudent();
+  } else {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const val = e.target.value.trim();
+      if (val.length > 0) {
+        searchStudent();
+      }
+    }, 600); // 600ms debounce
+  }
 });
 
 // ── Show Student Card ─────────────────────────────────────────────────────────

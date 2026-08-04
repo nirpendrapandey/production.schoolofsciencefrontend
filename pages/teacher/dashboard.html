@@ -151,21 +151,22 @@
         <div class="action-icon">➕</div>
         <div class="action-title">Add Student</div>
       </button>
-    </div>
-
-    <!-- Tabs -->
-    <div class="dashboard-tabs">
-      <button class="dash-tab active" data-tab="upload-hw" onclick="showTab('upload-hw')">📤 Homework</button>
-      <button class="dash-tab" data-tab="attendance" onclick="showTab('attendance')">✅ Attendance</button>
-      <button class="dash-tab" data-tab="students" onclick="showTab('students')">👥 My Students</button>
-      <button class="dash-tab" data-tab="add-student" onclick="showTab('add-student')">➕ Add Student</button>
-      <button class="dash-tab" data-tab="results" onclick="showTab('results')">📊 Results</button>
-      <button class="dash-tab" data-tab="notices" onclick="showTab('notices')">📢 Notices</button>
-      <button class="dash-tab" data-tab="profile" onclick="showTab('profile')">👤 Profile</button>
+      <button class="action-card" onclick="showTab('results')">
+        <div class="action-icon">📊</div>
+        <div class="action-title">Upload Result</div>
+      </button>
+      <button class="action-card" onclick="showTab('notices')">
+        <div class="action-icon">📢</div>
+        <div class="action-title">Post Notice</div>
+      </button>
+      <button class="action-card" onclick="showTab('profile')">
+        <div class="action-icon">👤</div>
+        <div class="action-title">Profile</div>
+      </button>
     </div>
 
     <!-- Upload Homework Tab -->
-    <div class="tab-content active" id="tab-upload-hw">
+    <div class="tab-content" id="tab-upload-hw">
       <div class="upload-card">
         <h3>📤 Upload Homework</h3>
         <form id="hw-form" novalidate>

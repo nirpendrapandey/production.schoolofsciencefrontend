@@ -160,6 +160,17 @@ async function loadDashboard() {
     
     // UP Board subjects mapping
     const upBoardSubjects = {
+      'Nursery': ['English', 'Hindi', 'Maths', 'Drawing', 'Rhymes'],
+      'LKG': ['English', 'Hindi', 'Maths', 'Drawing', 'Rhymes'],
+      'UKG': ['English', 'Hindi', 'Maths', 'Drawing', 'Rhymes', 'EVS'],
+      '1': ['Hindi', 'English', 'Maths', 'EVS', 'Computer', 'Drawing'],
+      '2': ['Hindi', 'English', 'Maths', 'EVS', 'Computer', 'Drawing'],
+      '3': ['Hindi', 'English', 'Maths', 'EVS', 'Computer', 'Drawing', 'G.K'],
+      '4': ['Hindi', 'English', 'Maths', 'Science', 'Social Science', 'Computer', 'G.K'],
+      '5': ['Hindi', 'English', 'Maths', 'Science', 'Social Science', 'Computer', 'G.K'],
+      '6': ['Hindi', 'English', 'Mathematics', 'Science', 'Social Science', 'Computer', 'Sanskrit'],
+      '7': ['Hindi', 'English', 'Mathematics', 'Science', 'Social Science', 'Computer', 'Sanskrit'],
+      '8': ['Hindi', 'English', 'Mathematics', 'Science', 'Social Science', 'Computer', 'Sanskrit'],
       '9': ['Hindi', 'English', 'Mathematics', 'Science', 'Social Science', 'Drawing'],
       '10': ['Hindi', 'English', 'Mathematics', 'Science', 'Social Science', 'Drawing'],
       '11': ['General Hindi', 'English', 'Physics', 'Chemistry', 'Mathematics', 'Biology'],
@@ -233,18 +244,18 @@ async function loadDashboard() {
     }
   } catch {}
 
-  // Load students for student list tab (default to class 1)
-  loadStudentsList('1');
+  // Load students for student list tab (default to teacher's class)
+  const defaultClass = user.classTeacherOf || '1';
+  const classFilter = document.getElementById('student-class-filter');
+  if (classFilter) {
+    classFilter.value = defaultClass;
+    classFilter.addEventListener('change', (e) => loadStudentsList(e.target.value));
+  }
+  loadStudentsList(defaultClass);
 
   // Submit attendance
   const attSubmitBtn = document.getElementById('submit-attendance-btn');
   if (attSubmitBtn) attSubmitBtn.addEventListener('click', submitAttendance);
-
-  // Student class filter
-  const classFilter = document.getElementById('student-class-filter');
-  if (classFilter) {
-    classFilter.addEventListener('change', (e) => loadStudentsList(e.target.value));
-  }
 
   // Homework form
   const hwForm = document.getElementById('hw-form');

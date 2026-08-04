@@ -1,28 +1,34 @@
 /**
  * pages/student/dashboard.js
  */
-
-function showTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.dash-tab').forEach(el => el.classList.remove('active'));
-
-  const tabEl = document.getElementById(`tab-${tabId}`);
-  if (tabEl) {
-    tabEl.classList.add('active');
-    // Scroll the tab bar into view so user can see the opened section
-    const tabBar = document.querySelector('.dashboard-tabs');
-    if (tabBar) {
-      tabBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  const tabBtn = document.querySelector(`[data-tab="${tabId}"]`);
-  if (tabBtn) {
-    tabBtn.classList.add('active');
-    // Scroll the active tab button into view inside the tab bar
-    tabBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  }
+function showAttendanceModal() {
+  const el = document.getElementById('attendance-modal'); if(el) el.style.display = 'block';
 }
+window.showAttendanceModal = showAttendanceModal;
+
+function closeAttendanceModal() {
+  const el = document.getElementById('attendance-modal'); if(el) el.style.display = 'none';
+}
+window.closeAttendanceModal = closeAttendanceModal;
+function showFeesModal() {
+  const el = document.getElementById('fees-modal'); if(el) el.style.display = 'block';
+}
+window.showFeesModal = showFeesModal;
+
+function closeFeesModal() {
+  const el = document.getElementById('fees-modal'); if(el) el.style.display = 'none';
+}
+window.closeFeesModal = closeFeesModal;
+
+function showProfileModal() {
+  const el = document.getElementById('profile-modal'); if(el) el.style.display = 'block';
+}
+window.showProfileModal = showProfileModal;
+
+function closeProfileModal() {
+  const el = document.getElementById('profile-modal'); if(el) el.style.display = 'none';
+}
+window.closeProfileModal = closeProfileModal;
 
 // Global logout function (available for onclick attribute)
 function doLogout() {
@@ -94,46 +100,89 @@ async function loadDashboard() {
   document.getElementById('profile-name').textContent = user.name;
   document.getElementById('pf-username').textContent = user.username;
   document.getElementById('pf-class').textContent = user.class ? `Class ${user.class}` : '—';
-  document.getElementById('pf-roll').textContent = user.rollNumber || '—';
-  document.getElementById('pf-phone').textContent = user.phone || '—';
+  const profileAvatar = document.getElementById('profile-avatar');
+  if (profileAvatar) {
+    if (user.photoUrl) {
+      profileAvatar.innerHTML = `<img src="${user.photoUrl}" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+      profileAvatar.style.background = 'transparent';
+      profileAvatar.style.border = 'none';
+    } else {
+      profileAvatar.textContent = Utils.getInitials(user.name);
+    }
+  }
+  
+  const profileName = document.getElementById('profile-name');
+  if (profileName) profileName.textContent = user.name;
+  
+  const pfUsername = document.getElementById('pf-username');
+  if (pfUsername) pfUsername.textContent = user.username;
+  
+  const pfClass = document.getElementById('pf-class');
+  if (pfClass) pfClass.textContent = user.class ? `Class ${user.class}` : '—';
+  
+  const pfRoll = document.getElementById('pf-roll');
+  if (pfRoll) pfRoll.textContent = user.rollNumber || '—';
+  
+  const pfPhone = document.getElementById('pf-phone');
+  if (pfPhone) pfPhone.textContent = user.phone || '—';
 
   // Logout button
-  document.getElementById('logout-btn').addEventListener('click', () => {
-    if (confirm('Are you sure you want to logout?')) {
-      Auth.logout('../../index.html');
-    }
-  });
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to logout?')) {
+        Auth.logout('../../index.html');
+      }
+    });
+  }
 
   // Load homework for student's class
   try {
     const hwRes = await API.get(`/homework?class=${user.class}`);
     const homeworkList = hwRes.success ? hwRes.data : [];
 
-    document.getElementById('stat-hw').textContent = homeworkList.length;
+    const statHw = document.getElementById('stat-hw');
+    if (statHw) statHw.textContent = homeworkList.length;
 
     const hwContent = document.getElementById('homework-content');
-    if (homeworkList.length > 0) {
-      hwContent.innerHTML = homeworkList.slice(0, 5).map(renderHomeworkItem).join('');
-    } else {
-      hwContent.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📚</div>
-        <div class="empty-state-title">No homework yet</div>
-        <div class="empty-state-desc">Your teacher hasn't assigned any homework.</div></div>`;
+    if (hwContent) {
+      if (homeworkList.length > 0) {
+        hwContent.innerHTML = homeworkList.slice(0, 5).map(renderHomeworkItem).join('');
+      } else {
+        hwContent.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📚</div>
+          <div class="empty-state-title">No homework yet</div>
+          <div class="empty-state-desc">Your teacher hasn't assigned any homework.</div></div>`;
+      }
     }
-  } catch { document.getElementById('stat-hw').textContent = '0'; }
+  } catch {
+    const statHw = document.getElementById('stat-hw');
+    if (statHw) statHw.textContent = '0';
+  }
 
   // Load attendance summary
   try {
     const attRes = await API.get('/attendance/summary');
     if (attRes.success) {
       const { present, absent, percentage } = attRes.data;
-      document.getElementById('stat-att').textContent = `${percentage}%`;
-      document.getElementById('att-present').textContent = present;
-      document.getElementById('att-absent').textContent = absent;
-      document.getElementById('att-pct').textContent = `${percentage}%`;
-      document.getElementById('att-bar').style.width = `${percentage}%`;
-      document.getElementById('att-bar').style.background =
-        percentage >= 75 ? 'var(--color-success)' :
-        percentage >= 50 ? 'var(--color-warning)' : 'var(--color-error)';
+      const statAtt = document.getElementById('stat-att');
+      if (statAtt) statAtt.textContent = `${percentage}%`;
+      
+      const attPresent = document.getElementById('att-present');
+      if (attPresent) attPresent.textContent = present;
+      
+      const attAbsent = document.getElementById('att-absent');
+      if (attAbsent) attAbsent.textContent = absent;
+      
+      const attPct = document.getElementById('att-pct');
+      if (attPct) attPct.textContent = `${percentage}%`;
+      
+      const attBar = document.getElementById('att-bar');
+      if (attBar) {
+        attBar.style.width = `${percentage}%`;
+        attBar.style.background =
+          percentage >= 75 ? 'var(--color-success)' :
+          percentage >= 50 ? 'var(--color-warning)' : 'var(--color-error)';
+      }
     }
   } catch {}
 
@@ -145,13 +194,18 @@ async function loadDashboard() {
       const avgPct = Math.round(resData.data.reduce((a, r) => a + (r.percentage || 0), 0) / resData.data.length);
       const gradeMap = [[90,'A+'],[80,'A'],[70,'B+'],[60,'B'],[50,'C'],[40,'D'],[0,'F']];
       const grade = (gradeMap.find(([min]) => avgPct >= min) || ['','F'])[1];
-      document.getElementById('stat-grade').textContent = grade;
+      
+      const statGrade = document.getElementById('stat-grade');
+      if (statGrade) statGrade.textContent = grade;
 
-      document.getElementById('results-content').innerHTML =
-        resData.data.slice(0, 5).map(renderResultItem).join('');
+      const resContent = document.getElementById('results-content');
+      if (resContent) resContent.innerHTML = resData.data.slice(0, 5).map(renderResultItem).join('');
     } else {
-      document.getElementById('stat-grade').textContent = '—';
-      document.getElementById('results-content').innerHTML = `
+      const statGrade = document.getElementById('stat-grade');
+      if (statGrade) statGrade.textContent = '—';
+      
+      const resContent = document.getElementById('results-content');
+      if (resContent) resContent.innerHTML = `
         <div class="empty-state"><div class="empty-state-icon">📊</div>
         <div class="empty-state-title">No results yet</div>
         <div class="empty-state-desc">Results will appear here once uploaded.</div></div>`;
@@ -162,12 +216,14 @@ async function loadDashboard() {
   try {
     const notRes = await API.get('/notices');
     if (notRes.success && notRes.data.length > 0) {
-      document.getElementById('notices-content').innerHTML =
-        notRes.data.slice(0, 3).map(renderNoticeItem).join('');
+      const notContent = document.getElementById('notices-content');
+      if (notContent) notContent.innerHTML = notRes.data.slice(0, 3).map(renderNoticeItem).join('');
     } else {
-      document.getElementById('notices-content').innerHTML = `
+      const notContent = document.getElementById('notices-content');
+      if (notContent) notContent.innerHTML = `
         <div class="empty-state"><div class="empty-state-icon">📢</div>
-        <div class="empty-state-title">No notices</div></div>`;
+        <div class="empty-state-title">No notices</div>
+        <div class="empty-state-desc">No new announcements at the moment.</div></div>`;
     }
   } catch {}
 
@@ -260,109 +316,9 @@ function fmtFeeDate(iso) {
   return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-function showConsolidatedReceipt() {
-  const yearSelect = document.getElementById('student-fee-year');
-  const selectedYearLabel = yearSelect.options[yearSelect.selectedIndex]?.text || '';
-  const currentYear = parseInt(yearSelect.value);
-  
-  // Find all paid fees for the selected academic year
-  const paidFees = [];
-  let totalAmount = 0;
-  
-  FEE_MONTHS.forEach(({ num, name }) => {
-    const feeYear = num >= 4 ? currentYear : currentYear + 1;
-    const mStr = String(num);
-    const fee = _studentFees.find(f => String(f.month) === mStr && parseInt(f.year) === feeYear && f.payment_status === 'paid');
-    
-    if (fee) {
-      paidFees.push({ monthName: name, year: feeYear, ...fee });
-      totalAmount += Number(fee.amount || 0);
-    }
-  });
 
-  if (paidFees.length === 0) {
-    alert('No paid fees available for the selected session.');
-    return;
-  }
 
-  const user = Auth.getUser();
 
-  let tableRows = paidFees.map((fee, index) => `
-    <tr style="border-bottom:1px solid #e2e8f0;">
-      <td style="padding:10px 4px;">${index + 1}</td>
-      <td style="padding:10px 4px;">${fee.monthName} ${fee.year}</td>
-      <td style="padding:10px 4px;">${fee.receipt_number || '—'}</td>
-      <td style="padding:10px 4px;">${fmtFeeDate(fee.payment_date)}</td>
-      <td style="padding:10px 4px;text-align:right;">₹${Number(fee.amount || 0).toLocaleString('en-IN')}</td>
-    </tr>
-  `).join('');
-
-  document.getElementById('fee-receipt-body').innerHTML = `
-    <div style="text-align:center;border-bottom:2px dashed #1e3a8a;padding-bottom:16px;margin-bottom:20px;">
-      <div style="font-size:24px;font-weight:800;color:#1e3a8a;letter-spacing:1px;">🏫 SCHOOL OF SCIENCE</div>
-      <div style="font-size:12px;color:#64748b;margin-bottom:12px;">A Rural School of Excellence</div>
-      <div style="display:inline-block;background:#eff6ff;color:#1d4ed8;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:800;text-transform:uppercase;border:1px solid #bfdbfe;">
-        Consolidated Fee Statement
-      </div>
-    </div>
-    
-    <div style="display:flex;justify-content:space-between;margin-bottom:20px;font-size:13px;background:#f8fafc;padding:12px;border-radius:8px;border:1px solid #e2e8f0;">
-      <div>
-        <div style="margin-bottom:6px;"><span style="color:#64748b;margin-right:8px;">Student Name:</span> <strong>${user.name}</strong></div>
-        <div style="margin-bottom:6px;"><span style="color:#64748b;margin-right:8px;">Roll Number:</span> <strong>${user.rollNumber || '—'}</strong></div>
-      </div>
-      <div style="text-align:right;">
-        <div style="margin-bottom:6px;"><span style="color:#64748b;margin-right:8px;">Session:</span> <strong>${selectedYearLabel}</strong></div>
-        <div style="margin-bottom:6px;"><span style="color:#64748b;margin-right:8px;">Date:</span> <strong>${fmtFeeDate(new Date().toISOString())}</strong></div>
-      </div>
-    </div>
-
-    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
-      <thead>
-        <tr style="background:#f1f5f9;border-bottom:2px solid #cbd5e1;text-align:left;">
-          <th style="padding:10px 4px;font-weight:700;">#</th>
-          <th style="padding:10px 4px;font-weight:700;">Month</th>
-          <th style="padding:10px 4px;font-weight:700;">Receipt No.</th>
-          <th style="padding:10px 4px;font-weight:700;">Paid On</th>
-          <th style="padding:10px 4px;font-weight:700;text-align:right;">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${tableRows}
-      </tbody>
-    </table>
-
-    <div style="border-top:2px solid #1e3a8a;padding-top:16px;display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:12px;color:#64748b;max-width:200px;">
-        <div style="margin-bottom:4px;">Payment Mode: <strong>Mixed/Various</strong></div>
-        <div>Total Months Paid: <strong>${paidFees.length}</strong></div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:12px;color:#64748b;margin-bottom:4px;">Total Amount Received</div>
-        <div style="font-size:22px;font-weight:800;color:#1e3a8a;">₹${totalAmount.toLocaleString('en-IN')}</div>
-      </div>
-    </div>
-    
-    <div style="text-align:center;margin-top:30px;position:relative;">
-      <span style="display:inline-block;border:3px solid #15803d;color:#15803d;padding:8px 24px;border-radius:6px;font-size:18px;font-weight:800;transform:rotate(-5deg);letter-spacing:2px;opacity:0.8;">PAID IN FULL ✓</span>
-    </div>
-    
-    <div style="text-align:center;margin-top:30px;font-size:11px;color:#94a3b8;border-top:1px dashed #e2e8f0;padding-top:16px;">
-      This is a computer-generated consolidated receipt and does not require a physical signature.<br>
-      School of Science – Education for Every Child
-    </div>
-  `;
-
-  document.getElementById('fee-receipt-modal').style.display = 'block';
-}
-
-function closeFeeReceipt() {
-  document.getElementById('fee-receipt-modal').style.display = 'none';
-}
-
-window.showConsolidatedReceipt = showConsolidatedReceipt;
-window.closeFeeReceipt = closeFeeReceipt;
-window.showTab = showTab;
 
 // ── Admit Card Logic ──────────────────────────────────────────────────────────
 async function downloadAdmitCard() {
@@ -385,7 +341,16 @@ async function downloadAdmitCard() {
     let feesList = feeRes.success ? (feeRes.data || []) : [];
 
     // 3. Count paid months for current academic session
-    let baseYear = new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1;
+    let maxYear = 0;
+    feesList.forEach(f => {
+      let y = parseInt(f.year);
+      let m = parseInt(f.month);
+      let sessionStartYear = m >= 4 ? y : y - 1;
+      if (f.payment_status === 'paid' && sessionStartYear > maxYear) {
+        maxYear = sessionStartYear;
+      }
+    });
+    let baseYear = maxYear > 0 ? maxYear : (new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1);
     const yearSelect = document.getElementById('student-fee-year');
     if (yearSelect && yearSelect.value) {
       baseYear = parseInt(yearSelect.value);
@@ -476,7 +441,7 @@ async function downloadAdmitCard() {
       </div>
     `;
 
-    document.getElementById('admit-card-modal').style.display = 'block';
+    const el = document.getElementById('admit-card-modal'); if(el) el.style.display = 'block';
 
   } catch (err) {
     console.error(err);
@@ -486,149 +451,285 @@ async function downloadAdmitCard() {
   }
 }
 
-function closeAdmitCard() {
-  document.getElementById('admit-card-modal').style.display = 'none';
+
+
+
+function generatePDF(elementId, filename, btnId) {
+  const btn = btnId ? document.getElementById(btnId) : null;
+  let originalHtml = '';
+  if (btn) {
+    originalHtml = btn.innerHTML;
+    btn.innerHTML = `<div class="action-icon" style="animation: spin 1s linear infinite;">⏳</div><div class="action-title">Downloading...</div>`;
+    btn.style.pointerEvents = 'none';
+  }
+
+  const printContainer = document.getElementById(elementId);
+  printContainer.style.display = 'block'; // Temporarily show it for html2pdf
+  
+  function triggerDownload() {
+    const opt = {
+      margin:       0,
+      filename:     filename,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, logging: false },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(printContainer).save().then(() => {
+      printContainer.style.display = 'none'; // Hide again
+      if (btn) { btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+    }).catch(() => {
+      printContainer.style.display = 'none';
+      if (btn) { btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+    });
+  }
+
+  if (typeof html2pdf === 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    script.onload = triggerDownload;
+    document.body.appendChild(script);
+  } else {
+    triggerDownload();
+  }
 }
 
 async function showConsolidatedMarksheet() {
+  const btn = document.getElementById('action-res');
+  let originalHtml = '';
+  if (btn) {
+    originalHtml = btn.innerHTML;
+    btn.innerHTML = `<div class="action-icon" style="animation: spin 1s linear infinite;">⏳</div><div class="action-title">Loading...</div>`;
+    btn.style.pointerEvents = 'none';
+  }
+
   try {
     const res = await API.get('/results');
+    if (!btn) return;
+    
     if (!res.success || !res.data || res.data.length === 0) {
-      alert('⚠️ No results found to generate marksheet.');
+      btn.innerHTML = originalHtml;
+      btn.style.pointerEvents = 'auto';
+      alert('No results available to generate marksheet.');
       return;
     }
 
     const user = Auth.getUser();
-    const results = res.data;
-    
-    // Grab the first examType from the results list
-    const examType = results[0].examType || 'Examination';
-
-    // Filter results for this examType
-    const examResults = results.filter(r => r.examType === examType);
-
     let totalMarks = 0;
-    let totalMaxMarks = 0;
+    let totalMaxMarks = res.data.length * 100;
 
-    const subjectsHtml = examResults.map(r => {
-      totalMarks += Number(r.marks || 0);
-      totalMaxMarks += Number(r.maxMarks || 0);
-      return `
-        <tr>
-          <td class="subject-name">${r.subject}</td>
-          <td>${r.maxMarks}</td>
-          <td>${r.marks}</td>
-          <td><strong>${r.grade}</strong></td>
+    let subjectsHtml = '';
+    res.data.forEach(r => {
+      totalMarks += (r.percentage || 0);
+      const gradeMap = [[90,'A+'],[80,'A'],[70,'B+'],[60,'B'],[50,'C'],[40,'D'],[0,'F']];
+      const grade = (gradeMap.find(([min]) => (r.percentage||0) >= min) || ['','F'])[1];
+      subjectsHtml += `
+        <tr style="background:#fcfdfe;">
+          <td style="padding:12px; font-weight:700; color:#1e3a8a;">${r.examName}</td>
+          <td style="padding:12px; text-align:center;">100</td>
+          <td style="padding:12px; text-align:center;">${r.percentage || 0}</td>
+          <td style="padding:12px; text-align:center; font-weight:bold;">${grade}</td>
         </tr>
       `;
-    }).join('');
+    });
 
-    const overallPct = totalMaxMarks > 0 ? Math.round((totalMarks / totalMaxMarks) * 100) : 0;
-    const finalResult = overallPct >= 40 ? 'PASS' : 'FAIL';
+    const overallPct = Math.round((totalMarks / totalMaxMarks) * 100);
+    const finalResult = overallPct >= 33 ? 'PASS' : 'FAIL';
     
-    const photoUrl = user.photoUrl ? user.photoUrl : '../../assets/images/placeholder.jpg';
+    let baseYear = new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1;
 
-    document.getElementById('student-marksheet-body').innerHTML = `
-      <div class="marksheet">
-        <div class="marksheet-content">
-          <div class="marksheet-header">
-            <div class="marksheet-emblem">
-              <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="45" stroke="#1E3A8A" stroke-width="4" fill="#FFF8E1"/>
-                <path d="M50 20 L25 40 L50 60 L75 40 Z" fill="#1E3A8A"/>
-                <path d="M35 50 L35 70 Q50 82 65 70 L65 50" stroke="#1E3A8A" stroke-width="3" fill="none"/>
-                <circle cx="50" cy="40" r="6" fill="#F7C948"/>
-              </svg>
-            </div>
-            <h1>School Of Science</h1>
-            <h3>Rural India's Finest School</h3>
-            <div class="marksheet-sub-title">Affiliated to Board of High School & Intermediate Education, U.P.</div>
-            <h4>${examType} Marksheet</h4>
-          </div>
-          
-          <div class="student-info">
-            <table class="info-table">
-              <tr>
-                <td class="info-label">Student Name</td>
-                <td>: ${user.name}</td>
-              </tr>
-              <tr>
-                <td class="info-label">Father's Name</td>
-                <td>: ${user.fatherName || '—'}</td>
-              </tr>
-              <tr>
-                <td class="info-label">Class</td>
-                <td>: Class ${user.class || '—'}</td>
-              </tr>
-              <tr>
-                <td class="info-label">Roll Number</td>
-                <td>: ${user.rollNumber || '—'}</td>
-              </tr>
-              <tr>
-                <td class="info-label">Date of Birth</td>
-                <td>: ${user.dateOfBirth ? Utils.formatDate(user.dateOfBirth) : '—'}</td>
-              </tr>
-            </table>
-          </div>
+    // Populate hidden template
+    document.getElementById('pm-name').textContent = user.name;
+    document.getElementById('pm-fname').textContent = user.fatherName || '—';
+    document.getElementById('pm-roll').textContent = user.rollNumber || '—';
+    document.getElementById('pm-class').textContent = user.class ? `Class ${user.class}` : '—';
+    document.getElementById('pm-year').textContent = `${baseYear}-${String(baseYear+1).slice(-2)}`;
+    document.getElementById('pm-subjects').innerHTML = subjectsHtml;
+    document.getElementById('pm-total').textContent = `${totalMarks} / ${totalMaxMarks}`;
+    document.getElementById('pm-pct').textContent = overallPct;
+    document.getElementById('pm-result').textContent = finalResult;
+    document.getElementById('pm-result').style.color = finalResult === 'PASS' ? '#10b981' : '#ef4444';
 
-          <table class="marks-table">
-            <thead>
-              <tr>
-                <th>Subject</th>
-                <th>Max Marks</th>
-                <th>Marks Obtained</th>
-                <th>Grade</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${subjectsHtml}
-            </tbody>
-          </table>
+    btn.innerHTML = originalHtml;
+    btn.style.pointerEvents = 'auto';
 
-          <div class="marksheet-summary">
-            <div>Total Marks: <span style="color:var(--color-primary)">${totalMarks}</span> / <span>${totalMaxMarks}</span></div>
-            <div>Percentage: <span style="color:var(--color-primary)">${overallPct}%</span></div>
-            <div class="${finalResult === 'PASS' ? 'result-pass' : 'result-fail'}">${finalResult}</div>
-          </div>
-
-          <div class="signatures">
-            <div class="sig-line">
-              Class Teacher Signature
-              <div class="sig-title">School Of Science</div>
-            </div>
-            <div class="sig-line">
-              Principal & Director
-              <div class="sig-title">Shri Ramakant Pandey</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    document.getElementById('marksheet-modal').style.display = 'block';
-
+    generatePDF('print-marksheet', `Marksheet_${user.name.replace(/ /g,'_')}.pdf`, 'action-res');
   } catch (err) {
+    if (btn) { btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
     console.error(err);
-    alert('Could not load marksheet. Please try again.');
+    alert('Could not generate marksheet.');
   }
 }
+window.showConsolidatedMarksheet = showConsolidatedMarksheet;
 
-function closeMarksheetModal() {
-  document.getElementById('marksheet-modal').style.display = 'none';
+async function downloadAdmitCard() {
+  const btn = document.getElementById('action-admit');
+  let originalHtml = '';
+  if (btn) {
+    originalHtml = btn.innerHTML;
+    btn.innerHTML = `<div class="action-icon" style="animation: spin 1s linear infinite;">⏳</div><div class="action-title">Loading...</div>`;
+    btn.style.pointerEvents = 'none';
+  }
+
+  try {
+    const res = await API.get('/admit-card/config');
+    if (!res.success || !res.data || !res.data.active) {
+      if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+      alert('No active exams right now. Admit cards are currently disabled.');
+      return;
+    }
+
+    const config = res.data;
+    const requiredMonths = parseInt(config.requiredMonths) || 0;
+
+    const feeRes = await API.get('/fees');
+    let feesList = feeRes.success ? (feeRes.data || []) : [];
+
+    let baseYear = new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1;
+    let paidCount = 0;
+    feesList.forEach(f => {
+      const mNum = parseInt(f.month);
+      const yNum = parseInt(f.year);
+      const isCurrentSession = (mNum >= 4 && yNum === baseYear) || (mNum < 4 && yNum === baseYear + 1);
+      if (isCurrentSession && f.payment_status === 'paid') paidCount++;
+    });
+
+    if (paidCount < requiredMonths) {
+      if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+      alert(`⚠️ You have paid fees for ${paidCount} months in the ${baseYear}-${String(baseYear+1).slice(-2)} session. Please clear at least ${requiredMonths} months of dues to download the ${config.examName} admit card.`);
+      return;
+    }
+
+    const user = Auth.getUser();
+    
+    // Populate hidden template
+    document.getElementById('pac-exam').textContent = config.examName;
+    document.getElementById('pac-name').textContent = user.name;
+    document.getElementById('pac-fname').textContent = user.fatherName || '—';
+    document.getElementById('pac-class').textContent = user.class ? `Class ${user.class}` : '—';
+    document.getElementById('pac-roll').textContent = user.rollNumber || '—';
+    document.getElementById('pac-session').textContent = `${baseYear}-${String(baseYear+1).slice(-2)}`;
+
+    if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+
+    generatePDF('print-admit-card', `AdmitCard_${user.name.replace(/ /g,'_')}.pdf`, 'action-admit');
+  } catch (err) {
+    if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+    console.error(err);
+    alert('Could not generate Admit Card. Please try again.');
+  }
+}
+window.downloadAdmitCard = downloadAdmitCard;
+
+window.showConsolidatedReceipt = function() {
+  const btn = document.querySelector('button[onclick="showConsolidatedReceipt()"]');
+  let originalHtml = '';
+  if (btn) {
+    originalHtml = btn.innerHTML;
+    btn.innerHTML = '⏳ Generating PDF...';
+    btn.style.pointerEvents = 'none';
+  }
+
+  const user = Auth.getUser();
+  const yearSelect = document.getElementById('student-fee-year');
+  let baseYear = yearSelect && yearSelect.value ? parseInt(yearSelect.value) : (new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1);
+  
+  API.get('/fees').then(res => {
+    const feesList = res.success ? (res.data || []) : [];
+    
+    let totalPaid = 0;
+    let rowsHtml = '';
+    
+    const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    feesList.forEach(f => {
+      const mNum = parseInt(f.month);
+      const yNum = parseInt(f.year);
+      const isCurrentSession = (mNum >= 4 && yNum === baseYear) || (mNum < 4 && yNum === baseYear + 1);
+      if (isCurrentSession && f.payment_status === 'paid') {
+        totalPaid += (f.amount || 0);
+        rowsHtml += `
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:12px; border:1px solid #0f766e;">Tuition Fee - ${monthNames[mNum]} ${yNum}</td>
+            <td style="padding:12px; text-align:right; border:1px solid #0f766e;">₹${f.amount || 0}</td>
+          </tr>
+        `;
+      }
+    });
+
+    if (totalPaid === 0) {
+      if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+      alert('You have no paid fees for the selected academic year to generate a receipt.');
+      return;
+    }
+
+    // Populate hidden template
+    document.getElementById('pfs-name').textContent = user.name;
+    document.getElementById('pfs-fname').textContent = user.fatherName || '—';
+    document.getElementById('pfs-class').textContent = user.class ? `Class ${user.class}` : '—';
+    document.getElementById('pfs-roll').textContent = user.rollNumber || '—';
+    document.getElementById('pfs-date').textContent = new Date().toLocaleDateString();
+    document.getElementById('pfs-year').textContent = `${baseYear}-${String(baseYear+1).slice(-2)}`;
+    document.getElementById('pfs-rows').innerHTML = rowsHtml;
+    document.getElementById('pfs-total').textContent = totalPaid;
+    document.getElementById('pfs-words').textContent = numberToWords(totalPaid) + ' Rupees Only';
+
+    if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+    generatePDF('print-fee-slip', `FeeReceipt_${user.name.replace(/ /g,'_')}.pdf`, null);
+  }).catch(err => {
+    if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+    console.error(err);
+    alert('Failed to generate fee slip.');
+  });
+};
+
+// Simple number to words logic for fee slip
+function numberToWords(num) {
+  const a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
+  const b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
+  if ((num = num.toString()).length > 9) return 'overflow';
+  let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+  if (!n) return ''; 
+  let str = '';
+  str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+  str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+  str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+  str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+  str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
+  return str.trim();
 }
 
+
+
+
 window.downloadAdmitCard = downloadAdmitCard;
-window.closeAdmitCard = closeAdmitCard;
+
 window.showConsolidatedMarksheet = showConsolidatedMarksheet;
-window.closeMarksheetModal = closeMarksheetModal;
+
 
 document.addEventListener('DOMContentLoaded', () => {
   loadDashboard().then(() => {
-    // Auto-open tab based on URL hash (e.g., #fees, #results)
-    const hash = window.location.hash.replace('#', '');
-    const validTabs = ['homework', 'attendance', 'results', 'notices', 'fees', 'profile'];
-    if (hash && validTabs.includes(hash)) {
-      showTab(hash);
+    // Intercept Bottom Nav "Profile" click
+    const navProfile = document.querySelector('[href="#profile"]');
+    if (navProfile) {
+      navProfile.addEventListener('click', (e) => {
+        e.preventDefault();
+        showProfileModal();
+      });
     }
+
+    // Intercept Bottom Nav "Fees" click
+    const navFees = document.querySelector('[href="#fees"]');
+    if (navFees) {
+      navFees.addEventListener('click', (e) => {
+        e.preventDefault();
+        showFeesModal();
+      });
+    }
+
+    // Auto-open modal based on URL hash (e.g., #fees, #profile)
+    const hash = window.location.hash.replace('#', '');
+    if (hash === 'fees') showFeesModal();
+    if (hash === 'profile') showProfileModal();
+    if (hash === 'results') showConsolidatedMarksheet();
   });
 });
