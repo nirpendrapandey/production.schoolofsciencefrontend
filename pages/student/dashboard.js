@@ -471,7 +471,7 @@ function generatePDF(elementId, filename, btnId) {
       margin:       0,
       filename:     filename,
       image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true, logging: false },
+      html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, windowWidth: 800 },
       jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
     html2pdf().set(opt).from(printContainer).save().then(() => {
