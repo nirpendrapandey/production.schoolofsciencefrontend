@@ -465,17 +465,25 @@ function generatePDF(elementId, filename, btnId) {
 
   const printContainer = document.getElementById(elementId);
   printContainer.style.display = 'block'; // Temporarily show it for html2pdf
+  printContainer.style.position = 'fixed';
+  printContainer.style.top = '0';
+  printContainer.style.left = '0';
+  printContainer.style.zIndex = '-9999';
   
   function triggerDownload() {
     const opt = {
       margin:       0,
       filename:     filename,
       image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, windowWidth: 800 },
+      html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0 },
       jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
     html2pdf().set(opt).from(printContainer).save().then(() => {
       printContainer.style.display = 'none'; // Hide again
+      printContainer.style.position = '';
+      printContainer.style.top = '';
+      printContainer.style.left = '';
+      printContainer.style.zIndex = '';
       if (btn) { btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
     }).catch(() => {
       printContainer.style.display = 'none';
