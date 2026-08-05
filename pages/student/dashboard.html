@@ -427,27 +427,34 @@
         <table class="pdf-table">
           <thead>
             <tr>
+              <th style="width:100px;">SUBJECT CODE</th>
               <th style="text-align:left;">SUBJECT NAME</th>
-              <th>MAX MARKS</th>
-              <th>OBTAINED MARKS</th>
-              <th>GRADE</th>
+              <th style="width:100px;">MAX MARKS</th>
+              <th style="width:140px;">OBTAINED MARKS<br>(OUT OF 100)</th>
+              <th style="width:80px;">GRADE</th>
             </tr>
           </thead>
           <tbody id="pm-subjects">
             <!-- Populated via JS -->
           </tbody>
-          <tfoot style="font-weight:800; font-size:15px;">
+          <tfoot style="font-weight:800; font-size:15px; background:#f4f4f4;">
             <tr>
-              <td colspan="2" style="text-align:right; border-top:2px solid #000;">Total Marks:</td>
-              <td colspan="2" style="text-align:center; border-top:2px solid #000;"><span id="pm-total"></span></td>
+              <td colspan="2" style="border:none;"></td>
+              <td style="text-align:right; border-top:2px solid #000; padding:4px 12px;">Total Marks:</td>
+              <td style="text-align:center; border-top:2px solid #000; padding:4px 12px;"><span id="pm-total"></span></td>
+              <td style="border-top:2px solid #000;"></td>
             </tr>
             <tr>
-              <td colspan="2" style="text-align:right;">Percentage:</td>
-              <td colspan="2" style="text-align:center;"><span id="pm-pct"></span>%</td>
+              <td colspan="2" style="border:none;"></td>
+              <td style="text-align:right; padding:4px 12px;">Percentage:</td>
+              <td style="text-align:center; padding:4px 12px;"><span id="pm-pct"></span>%</td>
+              <td></td>
             </tr>
             <tr>
-              <td colspan="2" style="text-align:right;">Result Status:</td>
-              <td colspan="2" style="text-align:center;"><span id="pm-result"></span></td>
+              <td colspan="2" style="border:none;"></td>
+              <td style="text-align:right; padding:4px 12px;">Result Status:</td>
+              <td style="text-align:center; padding:4px 12px;"><span id="pm-result"></span></td>
+              <td></td>
             </tr>
           </tfoot>
         </table>

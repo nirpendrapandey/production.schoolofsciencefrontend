@@ -518,16 +518,18 @@ async function showConsolidatedMarksheet() {
     let totalMaxMarks = res.data.length * 100;
 
     let subjectsHtml = '';
-    res.data.forEach(r => {
+    res.data.forEach((r, idx) => {
       totalMarks += (r.percentage || 0);
       const gradeMap = [[90,'A+'],[80,'A'],[70,'B+'],[60,'B'],[50,'C'],[40,'D'],[0,'F']];
       const grade = (gradeMap.find(([min]) => (r.percentage||0) >= min) || ['','F'])[1];
+      const code = '01' + (idx + 1);
       subjectsHtml += `
-        <tr style="background:#fcfdfe;">
-          <td style="padding:12px; font-weight:700; color:#1e3a8a;">${r.examName}</td>
-          <td style="padding:12px; text-align:center;">100</td>
-          <td style="padding:12px; text-align:center;">${r.percentage || 0}</td>
-          <td style="padding:12px; text-align:center; font-weight:bold;">${grade}</td>
+        <tr>
+          <td style="text-align:center;">${code}</td>
+          <td>${r.examName}</td>
+          <td style="text-align:center;">100</td>
+          <td style="text-align:center;">${r.percentage || 0}</td>
+          <td style="text-align:center; font-weight:bold;">${grade}</td>
         </tr>
       `;
     });
