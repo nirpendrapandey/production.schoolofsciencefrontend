@@ -465,10 +465,7 @@ function generatePDF(elementId, filename, btnId) {
 
   const printContainer = document.getElementById(elementId);
   printContainer.style.display = 'block'; // Temporarily show it for html2pdf
-  printContainer.style.position = 'fixed';
-  printContainer.style.top = '0';
-  printContainer.style.left = '0';
-  printContainer.style.zIndex = '-9999';
+  printContainer.style.minWidth = '790px';
   
   function triggerDownload() {
     const opt = {
@@ -480,10 +477,7 @@ function generatePDF(elementId, filename, btnId) {
     };
     html2pdf().set(opt).from(printContainer).save().then(() => {
       printContainer.style.display = 'none'; // Hide again
-      printContainer.style.position = '';
-      printContainer.style.top = '';
-      printContainer.style.left = '';
-      printContainer.style.zIndex = '';
+      printContainer.style.minWidth = '';
       if (btn) { btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
     }).catch(() => {
       printContainer.style.display = 'none';
