@@ -377,190 +377,253 @@
       </div>
     </div>
 
-    <!-- PDF Print Templates (Hidden) -->
         <!-- PDF Print Templates (Hidden) -->
     <div id="pdf-templates" style="display:none;">
-      
+      <style>
+        .pdf-page { width:794px; min-height:1123px; background:#fdfbf4; font-family:'Segoe UI',Roboto,sans-serif; color:#000; box-sizing:border-box; position:relative; z-index:1; }
+        .pdf-page::before { content:''; position:absolute; inset:0; background:url('../../assets/logo.png') center center no-repeat; background-size:60%; opacity:0.04; z-index:-1; }
+        .pdf-title { text-align:center; margin-bottom:20px; position:relative; }
+        .pdf-title h1 { margin:0; font-size:26px; color:#1e293b; font-weight:900; text-transform:uppercase; letter-spacing:1px; }
+        .pdf-title h2 { margin:5px 0 0; font-size:16px; font-weight:700; color:#475569; }
+        .pdf-logo { width:90px; position:absolute; left:0; top:0; }
+        .pdf-table { width:100%; border-collapse:collapse; margin-bottom:20px; font-size:14px; border:1px solid #475569; }
+        .pdf-table th, .pdf-table td { padding:10px 14px; border:1px solid #475569; }
+        .pdf-table th { background:#e2e8f0; font-weight:800; text-align:center; text-transform:uppercase; font-size:13px; color:#1e293b; }
+        .pdf-field-row { display:flex; font-size:15px; margin-bottom:8px; line-height:1.5; font-weight:700; color:#1e293b; }
+        .pdf-field-row span.val { border-bottom:1px solid #000; flex:1; margin-left:8px; font-weight:800; display:inline-block; }
+        .pdf-sign-box { text-align:center; font-size:14px; font-weight:800; color:#1e293b; }
+        .pdf-sign-box img { height:55px; display:block; margin:0 auto 5px; }
+        .pdf-stamp { width:90px; height:90px; border:2px solid #1e3a8a; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#1e3a8a; font-weight:bold; font-size:12px; opacity:0.4; transform:rotate(-15deg); flex-direction:column; margin:0 auto; }
+      </style>
+
       <!-- 1. Marksheet Template (A4) -->
-      <div id="print-marksheet" style="width:794px; min-height:1123px; background:white; padding:40px; font-family:'Segoe UI',Roboto,sans-serif; color:#000; box-sizing:border-box;">
-        <div style="text-align:center; border-bottom:4px solid #1e3a8a; padding-bottom:20px; margin-bottom:30px; position:relative;">
-          <img src="../../assets/logo.png" alt="Logo" style="width:80px; position:absolute; left:0; top:0;">
-          <h1 style="margin:0; font-size:36px; color:#1e3a8a; font-weight:900; text-transform:uppercase; letter-spacing:2px;">School Of Science</h1>
-          <p style="margin:5px 0 0; font-size:16px; font-weight:600; color:#475569;">Gram Bheeta Mafi, Post Hatwa Bazar, Basti</p>
-          <p style="margin:2px 0 0; font-size:14px; color:#64748b;">Phone: +91 9838266444 | Email: info@schoolofscience.edu</p>
-          <div style="margin-top:20px; display:inline-block; background:#1e3a8a; color:white; padding:8px 24px; border-radius:24px; font-size:18px; font-weight:800; letter-spacing:1px;">
-            ACADEMIC PERFORMANCE REPORT
+      <div id="print-marksheet" class="pdf-page" style="padding:40px; border:12px solid #f1f5f9;">
+        <div class="pdf-title">
+          <img src="../../assets/logo.png" alt="Logo" class="pdf-logo">
+          <h1>HIGH SCHOOL MARKS STATEMENT - <span id="pm-year"></span></h1>
+          <h2>BOARD OF SECONDARY EDUCATION</h2>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:25px; margin-top:40px;">
+          <div style="width:48%;">
+            <div class="pdf-field-row">STUDENT'S NAME: <span class="val" id="pm-name"></span></div>
+            <div class="pdf-field-row">FATHER'S NAME: <span class="val" id="pm-fname"></span></div>
+          </div>
+          <div style="width:48%;">
+            <div class="pdf-field-row">ROLL NUMBER: <span class="val" id="pm-roll"></span></div>
+            <div class="pdf-field-row">SCHOOL: <span class="val">SCHOOL OF SCIENCE, BHEETA MAPHI</span></div>
           </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:16px; line-height:1.8;">
-          <div style="width:48%;">
-            <table style="width:100%; border-collapse:collapse;">
-              <tr><td style="font-weight:700; width:120px;">Student Name</td><td>: <span id="pm-name"></span></td></tr>
-              <tr><td style="font-weight:700;">Father's Name</td><td>: <span id="pm-fname"></span></td></tr>
-              <tr><td style="font-weight:700;">Roll Number</td><td>: <span id="pm-roll"></span></td></tr>
-            </table>
-          </div>
-          <div style="width:48%;">
-            <table style="width:100%; border-collapse:collapse;">
-              <tr><td style="font-weight:700; width:120px;">Class</td><td>: <span id="pm-class"></span></td></tr>
-              <tr><td style="font-weight:700;">Academic Year</td><td>: <span id="pm-year"></span></td></tr>
-            </table>
-          </div>
-        </div>
-
-        <table style="width:100%; border-collapse:collapse; margin-bottom:30px; font-size:16px;" border="1">
+        <table class="pdf-table">
           <thead>
-            <tr style="background:#f1f5f9; color:#1e3a8a;">
-              <th style="padding:12px; text-align:left;">Subject</th>
-              <th style="padding:12px; text-align:center;">Max Marks</th>
-              <th style="padding:12px; text-align:center;">Marks Obtained</th>
-              <th style="padding:12px; text-align:center;">Grade</th>
+            <tr style="background:#d1d5db;">
+              <th style="text-align:left;">SUBJECT NAME</th>
+              <th>MAX MARKS</th>
+              <th>OBTAINED MARKS</th>
+              <th>GRADE</th>
             </tr>
           </thead>
           <tbody id="pm-subjects">
             <!-- Populated via JS -->
           </tbody>
+          <tfoot style="font-weight:800; background:#f3f4f6;">
+            <tr>
+              <td colspan="2" style="text-align:right;">Total Marks:</td>
+              <td colspan="2" style="text-align:center;"><span id="pm-total"></span></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align:right;">Percentage:</td>
+              <td colspan="2" style="text-align:center;"><span id="pm-pct"></span>%</td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align:right;">Result Status:</td>
+              <td colspan="2" style="text-align:center;"><span id="pm-result"></span></td>
+            </tr>
+          </tfoot>
         </table>
 
-        <div style="display:flex; justify-content:space-between; padding:20px; background:#f8fafc; border:2px solid #e2e8f0; border-radius:12px; margin-bottom:60px;">
-          <div style="font-size:18px;"><strong>Total Marks:</strong> <span id="pm-total"></span></div>
-          <div style="font-size:18px;"><strong>Percentage:</strong> <span id="pm-pct"></span>%</div>
-          <div style="font-size:18px;"><strong>Result:</strong> <span id="pm-result"></span></div>
+        <div style="display:flex; justify-content:space-between; margin-top:100px; align-items:flex-end; padding:0 20px;">
+          <div class="pdf-sign-box">
+            <img src="../../assets/principal.png" alt="Sign">
+            <div style="border-bottom:1px solid #000; width:220px; margin-bottom:5px;"></div>
+            PRINCIPAL'S SIGNATURE<br><span style="font-size:12px; font-weight:normal;">(Ramakant Pandey)</span>
+          </div>
+          <div class="pdf-stamp">
+            <span>SCHOOL OF</span>
+            <span style="font-size:16px;">SCIENCE</span>
+            <span>STAMP</span>
+          </div>
+          <div class="pdf-sign-box">
+            <div style="height:55px;"></div>
+            <div style="border-bottom:1px solid #000; width:220px; margin-bottom:5px;"></div>
+            CONTROLLER OF EXAMINATIONS
+          </div>
         </div>
-
-        <div style="display:flex; justify-content:space-between; margin-top:80px; align-items:flex-end;">
-          <div style="text-align:center;">
-            <div style="width:200px; border-bottom:1px solid #000; margin-bottom:10px;"></div>
-            <div style="font-weight:700; font-size:16px;">Class Teacher Signature</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="width:150px; height:150px; border:3px solid #1e3a8a; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; color:#1e3a8a; font-weight:bold; font-size:14px; opacity:0.3; transform:rotate(-15deg); flex-direction:column;">
-              <span style="font-size:16px; letter-spacing:1px; text-transform:uppercase;">School Of</span>
-              <span style="font-size:24px; font-weight:900; margin-top:5px; text-transform:uppercase;">Science</span>
-            </div>
-          </div>
-          <div style="text-align:center;">
-            <img src="../../assets/principal.png" alt="Sign" style="height:50px; margin-bottom:5px; display:block; margin:0 auto;">
-            <div style="width:200px; border-bottom:1px solid #000; margin-bottom:5px;"></div>
-            <div style="font-weight:700; font-size:16px;">Ramakant Pandey</div>
-            <div style="font-size:13px; color:#64748b;">Principal</div>
-          </div>
+        
+        <div style="text-align:center; font-size:14px; font-weight:700; margin-top:50px; border-top:2px solid #94a3b8; padding-top:10px;">
+          GRAM BHEETA MAFI POST HATWA BAZAR BASTI<br>
+          Contact Us: +91 02336-61121, 91 802 | Email: info@schoolofscience.edu
         </div>
       </div>
 
       <!-- 2. Admit Card Template (A4) -->
-      <div id="print-admit-card" style="width:794px; min-height:1123px; background:white; padding:40px; font-family:'Segoe UI',Roboto,sans-serif; color:#000; box-sizing:border-box;">
-        <div style="border:4px solid #1e3a8a; padding:30px; border-radius:16px; min-height:1035px; box-sizing:border-box;">
-          <div style="text-align:center; border-bottom:3px solid #1e3a8a; padding-bottom:20px; margin-bottom:30px; position:relative;">
-            <img src="../../assets/logo.png" alt="Logo" style="width:70px; position:absolute; left:0; top:0;">
-            <h1 style="margin:0; font-size:32px; color:#1e3a8a; font-weight:900; text-transform:uppercase;">School Of Science</h1>
-            <p style="margin:5px 0 0; font-size:14px; font-weight:600;">Gram Bheeta Mafi, Post Hatwa Bazar, Basti</p>
-            <div style="margin-top:20px; display:inline-block; background:#1e3a8a; color:white; padding:8px 24px; border-radius:24px; font-size:18px; font-weight:800; letter-spacing:1px;">
-              ADMIT CARD - <span id="pac-exam"></span>
-            </div>
-          </div>
+      <div id="print-admit-card" class="pdf-page" style="padding:40px; border:2px solid #94a3b8; margin:10px; min-height:1103px;">
+        <div style="border:1.5px solid #000; width:120px; height:150px; position:absolute; top:40px; left:40px; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:700; font-size:13px; background:#fff;">
+          AFFIX<br>PHOTO<br>HERE
+        </div>
+        
+        <div style="text-align:center; margin-bottom:30px; margin-left:140px;">
+          <img src="../../assets/logo.png" alt="Logo" style="width:100px; margin-bottom:10px;">
+          <h1 style="margin:0; font-size:24px; color:#1e293b; font-weight:900; text-transform:uppercase;">HIGH SCHOOL BOARD EXAMINATION - <span id="pac-session"></span></h1>
+          <h2 style="margin:5px 0 0; font-size:20px; font-weight:800; color:#334155; text-transform:uppercase;">ADMIT CARD - <span id="pac-exam"></span></h2>
+        </div>
 
-          <div style="display:flex; gap:30px; margin-bottom:40px;">
-            <div style="width:150px; height:190px; border:3px dashed #94a3b8; display:flex; align-items:center; justify-content:center; background:#f8fafc;">
-              <span style="color:#94a3b8; font-size:14px; font-weight:bold;">Paste Photo</span>
-            </div>
-            <div style="flex:1;">
-              <table style="width:100%; border-collapse:collapse; font-size:18px; line-height:2.5;">
-                <tr><td style="font-weight:700; width:150px; color:#475569;">Candidate Name</td><td style="font-weight:800;">: <span id="pac-name"></span></td></tr>
-                <tr><td style="font-weight:700; color:#475569;">Father's Name</td><td style="font-weight:800;">: <span id="pac-fname"></span></td></tr>
-                <tr><td style="font-weight:700; color:#475569;">Class</td><td style="font-weight:800;">: <span id="pac-class"></span></td></tr>
-                <tr><td style="font-weight:700; color:#475569;">Roll Number</td><td style="font-weight:800;">: <span id="pac-roll"></span></td></tr>
-                <tr><td style="font-weight:700; color:#475569;">Session</td><td style="font-weight:800;">: <span id="pac-session"></span></td></tr>
-              </table>
-            </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px; margin-top:40px; font-size:15px; font-weight:700;">
+          <div style="width:48%;">
+            <div class="pdf-field-row">STUDENT'S NAME: <span class="val" id="pac-name"></span></div>
+            <div class="pdf-field-row">FATHER'S NAME: <span class="val" id="pac-fname"></span></div>
           </div>
+          <div style="width:48%;">
+            <div class="pdf-field-row">ROLL NUMBER: <span class="val" id="pac-roll"></span></div>
+            <div class="pdf-field-row">CLASS: <span class="val" id="pac-class"></span></div>
+          </div>
+        </div>
+        <div class="pdf-field-row" style="margin-bottom:20px;">SCHOOL: <span class="val">SCHOOL OF SCIENCE, BHEETA MAPHI</span></div>
 
-          <div style="border:2px solid #e2e8f0; border-radius:12px; overflow:hidden; margin-bottom:60px;">
-            <div style="background:#f1f5f9; padding:12px 20px; font-weight:800; color:#334155; border-bottom:2px solid #e2e8f0; font-size:16px;">
-              Important Instructions for Candidates
-            </div>
-            <div style="padding:20px; font-size:15px; color:#475569; line-height:1.8;">
-              <ol style="margin:0; padding-left:20px;">
-                <li style="margin-bottom:10px;">Candidates must bring this Admit Card and valid School ID daily.</li>
-                <li style="margin-bottom:10px;">Electronic devices, calculators, and mobile phones are strictly prohibited in the exam hall.</li>
-                <li style="margin-bottom:10px;">Report to the examination center at least 20 minutes before the commencement of the exam.</li>
-                <li style="margin-bottom:10px;">Maintain absolute silence during the examination. Any malpractice will lead to immediate disqualification.</li>
-              </ol>
-            </div>
-          </div>
+        <table class="pdf-table">
+          <thead>
+            <tr style="background:#d1d5db;"><th colspan="4" style="font-size:15px;">EXAMINATION SCHEDULE</th></tr>
+            <tr style="background:#e2e8f0;">
+              <th>SUBJECT CODE</th>
+              <th>SUBJECT NAME</th>
+              <th>EXAM DATE</th>
+              <th>TIME</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="text-align:center;">011</td><td>English Language</td><td></td><td></td></tr>
+            <tr><td style="text-align:center;">012</td><td>Hindi</td><td></td><td></td></tr>
+            <tr><td style="text-align:center;">013</td><td>Mathematics</td><td></td><td></td></tr>
+            <tr><td style="text-align:center;">014</td><td>Science</td><td></td><td></td></tr>
+            <tr><td style="text-align:center;">015</td><td>Social Science</td><td></td><td></td></tr>
+            <tr><td style="text-align:center;">016</td><td>Computer Science</td><td></td><td></td></tr>
+          </tbody>
+        </table>
+        
+        <div class="pdf-field-row" style="margin-bottom:20px;">EXAMINATION CENTER NAME: <span class="val">SCHOOL OF SCIENCE, BHEETA MAPHI</span></div>
 
-          <div style="display:flex; justify-content:space-between; margin-top:100px; align-items:flex-end; padding:0 30px;">
-            <div style="text-align:center;">
-              <div style="width:220px; border-bottom:2px solid #000; margin-bottom:10px;"></div>
-              <div style="font-weight:700; font-size:16px; color:#334155;">Candidate's Signature</div>
-            </div>
-            <div style="text-align:center; position:relative;">
-              <div style="position:absolute; top:-40px; left:50%; transform:translateX(-50%) rotate(-10deg); border:3px solid #dc2626; color:#dc2626; padding:4px 16px; border-radius:4px; font-weight:900; font-size:16px; letter-spacing:2px; opacity:0.8;">APPROVED ✓</div>
-              <img src="../../assets/principal.png" alt="Sign" style="height:50px; margin-bottom:5px; display:block; margin:0 auto;">
-              <div style="width:220px; border-bottom:2px solid #000; margin-bottom:5px;"></div>
-              <div style="font-weight:700; font-size:16px; color:#334155;">Ramakant Pandey</div>
-              <div style="font-size:13px; color:#64748b;">Principal</div>
-            </div>
+        <div style="font-size:13px; line-height:1.6; font-weight:700; margin-bottom:40px; padding:10px; border:1px dashed #94a3b8;">
+          <strong>EXAMINATION TERMS & CONDITIONS:</strong><br>
+          1. Students must report to the examination center 30 minutes before the commencement of the exam.<br>
+          2. Admission will not be allowed to candidates who arrive more than 15 minutes late.<br>
+          3. Standard school uniform and a valid photo ID (like Aadhaar or School ID) must be carried.<br>
+          4. Use of unfair means will lead to immediate cancellation of the candidate's paper.<br>
+          5. Possession of any electronic gadgets, including smartwatches, is strictly prohibited.
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:50px; align-items:flex-end; padding:0 20px;">
+          <div class="pdf-sign-box">
+            <img src="../../assets/principal.png" alt="Sign">
+            <div style="border-bottom:1px solid #000; width:220px; margin-bottom:5px;"></div>
+            PRINCIPAL'S SIGNATURE<br><span style="font-size:12px; font-weight:normal;">(Ramakant Pandey)</span>
           </div>
+          <div class="pdf-stamp" style="width:80px; height:80px;">
+            <span style="font-size:10px;">SCHOOL</span><br><span>STAMP</span>
+          </div>
+          <div class="pdf-sign-box">
+            <div style="height:55px; border-bottom:1px solid #000; width:220px; margin-bottom:5px;"></div>
+            CANDIDATE'S SIGNATURE
+          </div>
+        </div>
+        
+        <div style="text-align:center; font-size:14px; font-weight:700; margin-top:50px; border-top:2px solid #94a3b8; padding-top:10px;">
+          GRAM BHEETA MAFI POST HATWA BAZAR BASTI<br>
+          Contact Us: Principal's Mobile: 9838266444 | General Enquiry: +91 02336-61121 | Email: info@schoolofscience.edu
         </div>
       </div>
 
       <!-- 3. Fee Slip Template (A4) -->
-      <div id="print-fee-slip" style="width:794px; min-height:1123px; background:white; padding:40px; font-family:'Segoe UI',Roboto,sans-serif; color:#000; box-sizing:border-box;">
-        <div style="text-align:center; border-bottom:4px solid #0f766e; padding-bottom:20px; margin-bottom:30px; position:relative;">
-          <img src="../../assets/logo.png" alt="Logo" style="width:80px; position:absolute; left:0; top:0;">
-          <h1 style="margin:0; font-size:36px; color:#0f766e; font-weight:900; text-transform:uppercase; letter-spacing:2px;">School Of Science</h1>
-          <p style="margin:5px 0 0; font-size:16px; font-weight:600; color:#475569;">Gram Bheeta Mafi, Post Hatwa Bazar, Basti</p>
-          <div style="margin-top:20px; display:inline-block; background:#0f766e; color:white; padding:8px 24px; border-radius:4px; font-size:18px; font-weight:800; letter-spacing:1px;">
-            OFFICIAL FEE RECEIPT
+      <div id="print-fee-slip" class="pdf-page" style="padding:40px 40px 40px 70px; border-left:35px dotted #e2e8f0; box-shadow: inset 8px 0 10px rgba(0,0,0,0.03);">
+        <div class="pdf-title" style="display:flex; align-items:center; gap:20px; border-bottom:3px solid #1e293b; padding-bottom:15px; margin-bottom:25px;">
+          <img src="../../assets/logo.png" alt="Logo" style="width:90px;">
+          <div style="text-align:left;">
+            <h1 style="font-size:26px; color:#1e293b;">SCHOOL OF SCIENCE, BHEETA MAPHI</h1>
+            <h2 style="font-size:18px; color:#334155; margin-top:8px;">FEE PAYMENT RECEIPT</h2>
           </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:16px; line-height:1.8; border:2px solid #e2e8f0; padding:20px; border-radius:12px;">
-          <div style="width:48%;">
-            <table style="width:100%; border-collapse:collapse;">
-              <tr><td style="font-weight:700; width:130px; color:#475569;">Student Name</td><td>: <strong id="pfs-name"></strong></td></tr>
-              <tr><td style="font-weight:700; color:#475569;">Father's Name</td><td>: <strong id="pfs-fname"></strong></td></tr>
-              <tr><td style="font-weight:700; color:#475569;">Class</td><td>: <strong id="pfs-class"></strong></td></tr>
-              <tr><td style="font-weight:700; color:#475569;">Roll Number</td><td>: <strong id="pfs-roll"></strong></td></tr>
-            </table>
-          </div>
-          <div style="width:48%;">
-            <table style="width:100%; border-collapse:collapse;">
-              <tr><td style="font-weight:700; width:130px; color:#475569;">Receipt Date</td><td>: <strong id="pfs-date"></strong></td></tr>
-              <tr><td style="font-weight:700; color:#475569;">Academic Year</td><td>: <strong id="pfs-year"></strong></td></tr>
-            </table>
-          </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:15px; font-weight:800; color:#1e293b;">
+          <div>RECEIPT NO: <span class="val" style="border-bottom:1px solid #000; padding:0 20px;">—</span></div>
+          <div>DATE: <span class="val" id="pfs-date" style="border-bottom:1px solid #000; padding:0 20px;"></span></div>
+          <div>SESSION: <span class="val" id="pfs-year" style="border-bottom:1px solid #000; padding:0 20px;"></span></div>
         </div>
 
-        <table style="width:100%; border-collapse:collapse; margin-bottom:40px; font-size:16px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:25px; font-size:15px; font-weight:800;">
+          <div style="width:48%;">
+            <div class="pdf-field-row">STUDENT NAME: <span class="val" id="pfs-name"></span></div>
+            <div class="pdf-field-row">FATHER'S NAME: <span class="val" id="pfs-fname"></span></div>
+          </div>
+          <div style="width:48%;">
+            <div class="pdf-field-row">ROLL NUMBER: <span class="val" id="pfs-roll"></span></div>
+            <div class="pdf-field-row">CLASS: <span class="val" id="pfs-class"></span></div>
+          </div>
+        </div>
+        
+        <div style="font-weight:900; font-size:16px; margin-bottom:10px; color:#1e293b;">FEE PARTICULARS</div>
+        <table class="pdf-table">
           <thead>
-            <tr style="background:#0f766e; color:white;">
-              <th style="padding:14px; text-align:left; border:1px solid #0f766e;">Fee Description</th>
-              <th style="padding:14px; text-align:right; border:1px solid #0f766e; width:200px;">Amount (₹)</th>
+            <tr style="background:#e5e7eb;">
+              <th style="width:80px;">SERIAL NO</th>
+              <th style="text-align:left;">FEE PARTICULAR</th>
+              <th style="width:150px; text-align:right;">AMOUNT (INR)</th>
             </tr>
           </thead>
           <tbody id="pfs-rows">
             <!-- Populated via JS -->
           </tbody>
-          <tfoot>
-            <tr style="background:#f0fdfa; font-weight:800; font-size:18px;">
-              <td style="padding:14px; text-align:right; border:1px solid #0f766e;">Total Paid Amount</td>
-              <td style="padding:14px; text-align:right; border:1px solid #0f766e; color:#0f766e;">₹<span id="pfs-total"></span></td>
+          <tfoot style="font-weight:900; font-size:16px; background:#f3f4f6;">
+            <tr>
+              <td colspan="2" style="text-align:right;">TOTAL</td>
+              <td style="text-align:right;">₹<span id="pfs-total"></span></td>
             </tr>
           </tfoot>
         </table>
 
-        <div style="margin-bottom:80px; font-size:16px;">
-          <strong>Amount in Words:</strong> <span id="pfs-words" style="text-transform:capitalize; border-bottom:1px dashed #cbd5e1; padding-bottom:2px;"></span>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:15px; font-weight:800;">
+          <div style="width:48%;">
+            <div class="pdf-field-row">TOTAL FEE PAYABLE: <span class="val"></span></div>
+            <div class="pdf-field-row">AMOUNT PAID: <span class="val"></span></div>
+            <div class="pdf-field-row">PAYMENT MODE: <span class="val">Cash / Online</span></div>
+          </div>
+          <div style="width:48%;">
+            <div class="pdf-field-row">AMOUNT PAID: <span class="val"></span></div>
+            <div class="pdf-field-row">TRANSACTION ID: <span class="val"></span></div>
+            <div class="pdf-field-row">REMAINING BALANCE: <span class="val">₹0.00</span></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom:20px; font-size:14px; font-weight:800;">
+          <strong>AMOUNT IN WORDS:</strong> <span id="pfs-words" style="text-transform:capitalize; border-bottom:1px solid #000; padding:0 10px;"></span>
         </div>
 
-        <div style="display:flex; justify-content:flex-end; padding-right:20px;">
-          <div style="text-align:center;">
-            <div style="width:200px; border-bottom:1px solid #000; margin-bottom:10px;"></div>
-            <div style="font-weight:700; font-size:16px;">Cashier / Admin Signature</div>
+        <div style="font-size:13px; font-weight:700; line-height:1.6; color:#334155; margin-bottom:50px;">
+          NOTE: This is a system generated receipt. All fees paid are non-refundable. Please keep this receipt for future reference. Total amount includes all term fees, examination fees, and lab charges as specified.
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; padding:0 20px;">
+          <div class="pdf-sign-box" style="text-align:left;">
+            <img src="../../assets/principal.png" alt="Sign" style="margin:0 0 5px 0; height:60px;">
+            <div style="border-bottom:1px solid #000; width:220px; margin-bottom:5px;"></div>
+            AUTHORIZED SIGNATORY<br><span style="font-size:12px; font-weight:normal;">(Ramakant Pandey)</span>
           </div>
+          <div class="pdf-stamp" style="border-radius:50%; width:90px; height:90px; opacity:0.6;">
+            <span>SCHOOL</span><br><span style="color:#16a34a; font-size:20px;">PAID</span>
+          </div>
+        </div>
+        
+        <div style="text-align:center; font-size:14px; font-weight:700; margin-top:50px; border-top:2px solid #94a3b8; padding-top:10px;">
+          Contact Us: Principal's Mobile: 9838266444 | General Enquiry: +91 02336-61121 | Email: info@schoolofscience.edu
         </div>
       </div>
     </div>
