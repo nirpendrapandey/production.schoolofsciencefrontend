@@ -350,15 +350,23 @@
       }
 
       // Fetch live notices for ticker
+      const tickerText = document.getElementById('ticker-text');
+      const originalText = tickerText.innerHTML;
+      tickerText.innerHTML = '<span style="opacity:0.7; font-size:12px;">⏳ Fetching live notices...</span>';
+      
       fetch('https://production-schoolofscience-backend.onrender.com/api/v1/notices?isPinned=true')
         .then(r => r.json())
         .then(res => {
           if (res.success && res.data.length > 0) {
             const texts = res.data.map(n => n.title).join(' &nbsp;•&nbsp; ');
-            document.getElementById('ticker-text').innerHTML = texts;
+            tickerText.innerHTML = texts;
+          } else {
+            tickerText.innerHTML = originalText;
           }
         })
-        .catch(() => {}); // fail silently – ticker has default text
+        .catch(() => {
+          tickerText.innerHTML = originalText;
+        }); // fail silently – ticker has default text
     });
   </script>
 </body>

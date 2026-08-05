@@ -78,17 +78,8 @@ function applyFilter(filter) {
 }
 
 async function loadGallery() {
-  try {
-    const res = await API.get('/gallery');
-    if (res.success && res.data && res.data.length > 0) {
-      allImages = res.data;
-    } else {
-      allImages = DEMO_IMAGES;
-    }
-  } catch {
-    allImages = DEMO_IMAGES;
-  }
-
+  // Use frontend images directly instead of backend fetch
+  allImages = DEMO_IMAGES;
   renderGallery(allImages);
 }
 
