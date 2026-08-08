@@ -180,6 +180,8 @@ async function loadDashboard() {
     const subjects = upBoardSubjects[cls] || ['Hindi', 'English', 'Mathematics', 'Science', 'Social Science'];
     const subContainer = document.getElementById('up-board-subjects-container');
     if (subContainer) {
+      // Clear first to prevent double-render if called more than once
+      subContainer.innerHTML = '';
       subContainer.innerHTML = subjects.map(sub => `
         <div class="form-group" style="margin-bottom:0;">
           <label class="form-label" style="font-size:var(--font-size-xs);">${sub}</label>
@@ -300,7 +302,8 @@ async function loadDashboard() {
       const examType = document.getElementById('res-exam').value;
 
       const results = [];
-      document.querySelectorAll('.res-sub-marks').forEach(input => {
+      // Scope to resultForm only — prevents picking up stale/duplicate inputs from rest of DOM
+      resultForm.querySelectorAll('.res-sub-marks').forEach(input => {
         results.push({
           subject: input.dataset.subject,
           marks: Number(input.value),

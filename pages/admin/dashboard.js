@@ -681,9 +681,41 @@ async function saveResultConfig(e) {
 }
 window.saveResultConfig = saveResultConfig;
 
-// ── Initialize ────────────────────────────────────────────────────────────────
+// ── System Settings ──────────────────────────────────────────────────────────
+async function loadSettings() {
+  try {
+    const res = await API.get('/settings');
+    if (res.success && res.data) {
+      document.getElementById('toggle-admit-cards').checked = res.data.admitCardsActive;
+      document.getElementById('toggle-results').checked = res.data.resultsActive;
+    }
+  } catch (err) {
+    console.error('Failed to load settings:', err);
+  }
+}
+
+async function saveSettings() {
+  const admitCardsActive = document.getElementById('toggle-admit-cards').checked;
+  const resultsActive = document.getElementById('toggle-results').checked;
+  
+  try {
+    const res = await API.put('/settings', { admitCardsActive, resultsActive });
+    if (res.success) {
+      alert('Settings saved successfully!');
+    } else {
+      alert(res.message || 'Failed to save settings');
+    }
+  } catch (err) {
+    console.error('Error saving settings:', err);
+    alert('An error occurred while saving settings.');
+  }
+}
+window.saveSettings = saveSettings;
+
+// ── Initialize ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadDashboardStats();
   loadAdmitCardConfig();
   loadResultConfig();
+  loadSettings();
 });

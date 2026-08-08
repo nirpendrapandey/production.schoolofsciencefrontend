@@ -380,22 +380,149 @@
                 <!-- PDF Print Templates (Hidden) -->
     <div id="pdf-templates" style="display:none;">
       <style>
-        .pdf-page { width:790px; height:1115px; margin:0 auto; background-color:#FCF8EB; font-family:Arial, Helvetica, sans-serif; color:#000; box-sizing:border-box; position:relative; overflow:hidden; z-index:1; }
-        .pdf-watermark { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:450px; opacity:0.06; z-index:-1; }
-        .pdf-title-block { text-align:center; position:relative; margin-bottom:15px; }
-        .pdf-title-block h1 { margin:0; font-size:24px; font-weight:900; text-transform:uppercase; color:#000; }
-        .pdf-title-block h2 { margin:5px 0 0; font-size:18px; font-weight:800; color:#000; }
+        /* ── PDF Base ── */
+        .pdf-page {
+          width: 210mm;
+          min-height: 297mm;
+          margin: 0 auto;
+          background-color: #F5F0E8;
+          font-family: Arial, Helvetica, sans-serif;
+          color: #000;
+          box-sizing: border-box;
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+        }
+        .pdf-watermark {
+          position: absolute;
+          top: 50%; left: 50%;
+          transform: translate(-50%, -50%);
+          width: 55%;
+          opacity: 0.05;
+          z-index: 0;
+          pointer-events: none;
+        }
+        /* ── Marksheet specific ── */
+        .ms-outer-border {
+          border: 6px double #000;
+          padding: 28px 32px;
+          position: relative;
+          z-index: 1;
+          min-height: 277mm;
+          box-sizing: border-box;
+        }
+        .ms-logo { width: 88px; display: block; margin: 0 auto 8px; }
+        .ms-title {
+          text-align: center;
+          margin-bottom: 18px;
+          border-bottom: 2px solid #000;
+          padding-bottom: 14px;
+        }
+        .ms-title h1 {
+          margin: 0 0 4px;
+          font-size: 17px;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .ms-title h2 {
+          margin: 0;
+          font-size: 13px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+        /* ── Student Info Row ── */
+        .ms-info-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 6px 24px;
+          margin-bottom: 18px;
+        }
+        .ms-field {
+          display: flex;
+          align-items: flex-end;
+          font-size: 12.5px;
+          font-weight: 700;
+          gap: 6px;
+        }
+        .ms-field-val {
+          border-bottom: 1.2px solid #000;
+          flex: 1;
+          font-weight: 800;
+          padding: 0 4px 1px;
+          min-height: 17px;
+          font-size: 13px;
+          text-transform: uppercase;
+        }
+        /* ── Marks Table ── */
+        .ms-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 13px;
+          border: 2px solid #000;
+          margin-bottom: 0;
+        }
+        .ms-table th, .ms-table td {
+          border: 1px solid #000;
+          padding: 7px 10px;
+          text-align: center;
+        }
+        .ms-table th {
+          background: #dce3f0;
+          font-weight: 900;
+          font-size: 11.5px;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+          border: 2px solid #000;
+        }
+        .ms-table td.ms-sub-name { text-align: left; font-weight: 600; }
+        .ms-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+        .ms-table tfoot tr td { background: #eef1f8; font-weight: 800; border-top: 2px solid #000; }
+        /* ── Signatures ── */
+        .ms-signs {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin-top: 36px;
+          padding: 0 10px;
+        }
+        .ms-sign-box { text-align: center; font-size: 11.5px; font-weight: 800; }
+        .ms-sign-box img { height: 44px; display: block; margin: 0 auto 4px; }
+        .ms-sign-line { border-top: 1.5px solid #000; width: 180px; padding-top: 5px; margin: 0 auto 2px; }
+        .ms-stamp {
+          width: 82px; height: 82px;
+          border: 2px solid #000;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          text-align: center;
+          transform: rotate(-15deg);
+          opacity: 0.75;
+          font-size: 11px;
+          font-weight: 900;
+          line-height: 1.3;
+        }
+        .ms-footer {
+          text-align: center;
+          font-size: 11px;
+          font-weight: 700;
+          margin-top: 28px;
+          padding-top: 12px;
+          border-top: 1.5px solid #000;
+          line-height: 1.7;
+        }
+        /* ── Fee/Admit shared ── */
         .pdf-field-box { display:flex; font-size:14px; font-weight:700; margin-bottom:8px; align-items:flex-end; }
         .pdf-field-val { border-bottom:1.5px solid #000; flex:1; margin-left:8px; font-weight:800; padding:0 5px; min-height:18px; }
-        
         .pdf-table { width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px; border:2px solid #000; }
         .pdf-table th, .pdf-table td { padding:8px 12px; border:1px solid #000; }
         .pdf-table th { background:#e2e8f0; font-weight:800; text-align:center; border:2px solid #000; }
-        
         .pdf-sign-box { text-align:center; font-size:12px; font-weight:800; }
         .pdf-sign-box img { height:50px; display:block; margin:0 auto; }
-        
-        /* Fee Slip Specific Holes */
+        .pdf-title-block { text-align:center; position:relative; margin-bottom:15px; }
+        .pdf-title-block h1 { margin:0; font-size:24px; font-weight:900; text-transform:uppercase; color:#000; }
+        .pdf-title-block h2 { margin:5px 0 0; font-size:18px; font-weight:800; color:#000; }
+        /* Fee Slip Specific */
         .pdf-holes { position:absolute; left:12px; top:20px; bottom:20px; width:16px; display:flex; flex-direction:column; justify-content:space-between; z-index:5; }
         .pdf-hole { width:14px; height:14px; border-radius:50%; background:#fff; border:1px inset #ccc; box-shadow:inset 2px 2px 4px rgba(0,0,0,0.2); }
         .fee-shadow-edge { position:absolute; left:0; top:0; bottom:0; width:40px; background:linear-gradient(to right, rgba(0,0,0,0.06), transparent); z-index:0; }
@@ -404,256 +531,354 @@
       <!-- ========================================== -->
       <!-- 1. Marksheet Template (A4)                 -->
       <!-- ========================================== -->
-      <div id="print-marksheet" class="pdf-page" style="padding:30px; border:4px solid #FCF8EB; outline:2px solid #000; outline-offset:-10px;">
+      <div id="print-marksheet" class="pdf-page">
         <img src="../../assets/logo.png" class="pdf-watermark" alt="Watermark">
-        
-        <div class="pdf-title-block" style="margin-top:10px;">
-          <img src="../../assets/logo.png" style="width:80px; margin-bottom:5px;" alt="Logo">
-          <h1>HIGH SCHOOL MARKS STATEMENT - <span id="pm-year"></span></h1>
-          <h2>BOARD OF SECONDARY EDUCATION</h2>
-        </div>
-        
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px; margin-top:20px;">
-          <div style="width:48%;">
-            <div class="pdf-field-box">STUDENT'S NAME: <span class="pdf-field-val" id="pm-name"></span></div>
-            <div class="pdf-field-box">FATHER'S NAME: <span class="pdf-field-val" id="pm-fname"></span></div>
-          </div>
-          <div style="width:48%;">
-            <div class="pdf-field-box">ROLL NUMBER: <span class="pdf-field-val" id="pm-roll"></span></div>
-            <div class="pdf-field-box">SCHOOL: <span class="pdf-field-val">SCHOOL OF SCIENCE, BHEETA MAPHI</span><span id="pm-class" style="display:none;"></span></div>
-          </div>
-        </div>
+        <div class="ms-outer-border">
 
-        <table class="pdf-table">
-          <thead>
-            <tr>
-              <th style="width:100px;">SUBJECT CODE</th>
-              <th style="text-align:left;">SUBJECT NAME</th>
-              <th style="width:100px;">MAX MARKS</th>
-              <th style="width:140px;">OBTAINED MARKS<br>(OUT OF 100)</th>
-              <th style="width:80px;">GRADE</th>
-            </tr>
-          </thead>
-          <tbody id="pm-subjects">
-            <!-- Populated via JS -->
-          </tbody>
-          <tfoot style="font-weight:800; font-size:15px; background:#f4f4f4;">
-            <tr>
-              <td colspan="2" style="border:none;"></td>
-              <td style="text-align:right; border-top:2px solid #000; padding:4px 12px;">Total Marks:</td>
-              <td style="text-align:center; border-top:2px solid #000; padding:4px 12px;"><span id="pm-total"></span></td>
-              <td style="border-top:2px solid #000;"></td>
-            </tr>
-            <tr>
-              <td colspan="2" style="border:none;"></td>
-              <td style="text-align:right; padding:4px 12px;">Percentage:</td>
-              <td style="text-align:center; padding:4px 12px;"><span id="pm-pct"></span>%</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colspan="2" style="border:none;"></td>
-              <td style="text-align:right; padding:4px 12px;">Result Status:</td>
-              <td style="text-align:center; padding:4px 12px;"><span id="pm-result"></span></td>
-              <td></td>
-            </tr>
-          </tfoot>
-        </table>
+          <!-- Header -->
+          <div class="ms-title">
+            <img src="../../assets/logo.png" class="ms-logo" alt="School Logo">
+            <h1 id="pm-title-line">HIGH SCHOOL MARKS STATEMENT &ndash; CLASS <span id="pm-class-title"></span> (<span id="pm-year"></span>)</h1>
+            <h2>UTTAR PRADESH MADHYAMIK SHIKSHA PARISHAD (UP BOARD)</h2>
+          </div>
 
-        <div style="display:flex; justify-content:space-between; margin-top:70px; padding:0 20px; align-items:flex-end;">
-          <div class="pdf-sign-box">
-            <img src="../../assets/principal.png" alt="Sign">
-            <div style="border-bottom:1.5px solid #000; width:220px; margin-bottom:5px;"></div>
-            PRINCIPAL'S SIGNATURE
+          <!-- Student Info -->
+          <div class="ms-info-grid">
+            <div class="ms-field">
+              <span>STUDENT'S NAME:&nbsp;</span>
+              <span class="ms-field-val" id="pm-name"></span>
+            </div>
+            <div class="ms-field">
+              <span>ROLL NUMBER:&nbsp;</span>
+              <span class="ms-field-val" id="pm-roll"></span>
+            </div>
+            <div class="ms-field">
+              <span>FATHER'S NAME:&nbsp;</span>
+              <span class="ms-field-val" id="pm-fname"></span>
+            </div>
+            <div class="ms-field">
+              <span>SCHOOL:&nbsp;</span>
+              <span class="ms-field-val">SCHOOL OF SCIENCE, BHEETA MAPHI</span>
+              <span id="pm-class" style="display:none;"></span>
+            </div>
           </div>
-          <div style="width:90px; height:90px; border:2px solid #000; border-radius:50%; display:flex; align-items:center; justify-content:center; text-align:center; transform:rotate(-15deg); opacity:0.7;">
-            <strong>SCHOOL OF<br><span style="font-size:14px;">SCIENCE</span><br>STAMP</strong>
+
+          <!-- Marks Table -->
+          <table class="ms-table">
+            <thead>
+              <tr>
+                <th style="width:90px;">SUBJECT<br>CODE</th>
+                <th style="text-align:left;">SUBJECT NAME</th>
+                <th style="width:90px;">MAX<br>MARKS</th>
+                <th style="width:120px;">OBTAINED MARKS<br>(OUT OF 100)</th>
+                <th style="width:70px;">GRADE</th>
+              </tr>
+            </thead>
+            <tbody id="pm-subjects"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" style="text-align:right; border-top:2px solid #000; padding:6px 12px; font-size:13px;">Total Marks:</td>
+                <td style="text-align:center; border-top:2px solid #000;"><span id="pm-total"></span></td>
+                <td style="border-top:2px solid #000;"></td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align:right; padding:5px 12px; font-size:13px;">Percentage:</td>
+                <td style="text-align:center;"><span id="pm-pct"></span>%</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align:right; padding:5px 12px; font-size:13px;">Result Status:</td>
+                <td style="text-align:center;"><span id="pm-result"></span></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <!-- Signatures -->
+          <div class="ms-signs">
+            <div class="ms-sign-box">
+              <img src="../../assets/sign_ramakant.png" alt="Ramakant Pandey Signature" style="height:48px; display:block; margin:0 auto 2px; mix-blend-mode:multiply;" onerror="this.style.display='none'">
+              <div class="ms-sign-line"></div>
+              PRINCIPAL'S SIGNATURE
+              <div style="font-size:10px; font-weight:600; margin-top:2px; color:#333;">(Ramakant Pandey)</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center;">
+              <img src="../../assets/stamp.png" alt="School of Science Stamp"
+                style="width:100px; height:100px; object-fit:contain; transform:rotate(-12deg); mix-blend-mode:multiply; opacity:0.85;"
+                onerror="this.outerHTML='<div class=\'ms-stamp\'>SCHOOL<br>OF<br>SCIENCE<br><span style=\'font-size:9px;\'>★ STAMP ★</span></div>'">
+            </div>
+            <div class="ms-sign-box">
+              <img src="../../assets/sign_shivangi.png" alt="Shivangi Pandey Signature" style="height:48px; display:block; margin:0 auto 2px; mix-blend-mode:multiply;" onerror="this.style.display='none'">
+              <div class="ms-sign-line"></div>
+              CONTROLLER OF EXAMINATIONS
+              <div style="font-size:10px; font-weight:600; margin-top:2px; color:#333;">(Shivangi Pandey)</div>
+            </div>
           </div>
-          <div class="pdf-sign-box">
-            <div style="height:50px;"></div>
-            <div style="border-bottom:1.5px solid #000; width:220px; margin-bottom:5px;"></div>
-            CONTROLLER OF EXAMINATIONS
+
+          <!-- Footer -->
+          <div class="ms-footer">
+            GRAM BHEETA MAFI POST HATWA BAZAR BASTI<br>
+            Contact Us: +91 9838266444 &nbsp;|&nbsp; General Enquiry: +91 02336-61121 &nbsp;|&nbsp; Email: khqaamn@gmail.com
           </div>
-        </div>
-        
-        <div style="text-align:center; font-size:12px; font-weight:700; margin-top:40px;">
-          GRAM BHEETA MAFI POST HATWA BAZAR BASTI<br>
-          Contact Us: Principal's Mobile: 9838266444 | General Enquiry: +91 02336-61121 | Email: khqaamn@gmail.com
         </div>
       </div>
-
       <!-- ========================================== -->
       <!-- 2. Admit Card Template (A4)                -->
       <!-- ========================================== -->
-      <div id="print-admit-card" class="pdf-page" style="padding:30px; border:2px dotted #000;">
+      <div id="print-admit-card" class="pdf-page">
         <img src="../../assets/logo.png" class="pdf-watermark" alt="Watermark">
-        
-        <div style="border:1.5px solid #000; width:120px; height:150px; position:absolute; top:30px; left:30px; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:700; font-size:14px; background:#fff; z-index:10;">
-          AFFIX<br>PHOTO<br>HERE
-        </div>
-        
-        <div class="pdf-title-block" style="margin-left:140px; margin-top:10px;">
-          <img src="../../assets/logo.png" style="width:80px; margin-bottom:5px;" alt="Logo">
-          <h1>HIGH SCHOOL BOARD EXAMINATION - <span id="pac-session"></span></h1>
-          <h2>ADMIT CARD - <span id="pac-exam"></span></h2>
-        </div>
+        <div class="ms-outer-border" style="padding:22px 28px;">
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px; margin-top:20px;">
-          <div style="width:48%;">
-            <div class="pdf-field-box">STUDENT'S NAME: <span class="pdf-field-val" id="pac-name"></span></div>
-            <div class="pdf-field-box">FATHER'S NAME: <span class="pdf-field-val" id="pac-fname"></span></div>
-          </div>
-          <div style="width:48%;">
-            <div class="pdf-field-box">ROLL NUMBER: <span class="pdf-field-val" id="pac-roll"></span></div>
-            <div class="pdf-field-box">ENROLLMENT NO: <span class="pdf-field-val"></span></div>
-          </div>
-        </div>
-        <div class="pdf-field-box" style="margin-bottom:15px;">SCHOOL: <span class="pdf-field-val">SCHOOL OF SCIENCE, BHEETA MAPHI</span><span id="pac-class" style="display:none;"></span></div>
+          <!-- TOP ROW: Photo box left, Logo+Title center -->
+          <div style="display:flex; align-items:flex-start; margin-bottom:14px; gap:16px;">
 
-        <table class="pdf-table">
-          <thead>
-            <tr><th colspan="4" style="font-size:15px; background:#d1d5db;">EXAMINATION SCHEDULE</th></tr>
-            <tr>
-              <th style="width:120px;">SUBJECT CODE</th>
-              <th>SUBJECT NAME</th>
-              <th style="width:120px;">EXAM DATE</th>
-              <th style="width:100px;">TIME</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td style="text-align:center;">011</td><td>English Language</td><td></td><td></td></tr>
-            <tr><td style="text-align:center;">012</td><td>Hindi</td><td></td><td></td></tr>
-            <tr><td style="text-align:center;">013</td><td>Mathematics</td><td></td><td></td></tr>
-            <tr><td style="text-align:center;">014</td><td>Science</td><td></td><td></td></tr>
-            <tr><td style="text-align:center;">015</td><td>Social Science</td><td></td><td></td></tr>
-            <tr><td style="text-align:center;">016</td><td>Computer Science</td><td></td><td></td></tr>
-          </tbody>
-        </table>
-        
-        <div class="pdf-field-box" style="margin-bottom:15px;">EXAMINATION CENTER NAME: <span class="pdf-field-val">SCHOOL OF SCIENCE, BHEETA MAPHI</span></div>
+            <!-- AFFIX PHOTO BOX -->
+            <div style="border:1.5px solid #000; width:110px; min-width:110px; height:135px; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:800; font-size:13px; background:#fff; flex-shrink:0; line-height:1.6;">
+              AFFIX<br>PHOTO<br>HERE
+            </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
-          <div class="pdf-field-box" style="width:250px;">CENTER CODE: <span class="pdf-field-val"></span></div>
-          <div style="flex:1; margin-left:20px; font-size:12px; line-height:1.4; font-weight:700;">
-            <strong>EXAMINATION TERMS & CONDITIONS:</strong><br>
-            1. Students must report 30 minutes before exam.<br>
-            2. Late entry over 15 minutes is strictly not allowed.<br>
-            3. Standard school uniform and ID are mandatory.<br>
-            4. Unfair means will lead to immediate cancellation.<br>
-            5. Electronic gadgets are strictly prohibited.
+            <!-- Title Block -->
+            <div style="flex:1; text-align:center;">
+              <img src="../../assets/logo.png" style="width:78px; margin-bottom:6px;" alt="School Logo">
+              <div style="font-size:16.5px; font-weight:900; text-transform:uppercase; letter-spacing:0.3px; line-height:1.3; margin-bottom:3px;">
+                HIGH SCHOOL BOARD EXAMINATION (CLASS <span id="pac-class-title"></span>) - <span id="pac-session"></span>
+              </div>
+              <div style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">
+                ADMIT CARD
+              </div>
+              <div style="font-size:11px; font-weight:600; margin-top:2px; color:#444;">
+                <span id="pac-exam"></span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div style="display:flex; justify-content:space-between; margin-top:20px; padding:0 20px; align-items:flex-end;">
-          <div class="pdf-sign-box">
-            <img src="../../assets/principal.png" alt="Sign">
-            <div style="border-bottom:1.5px solid #000; width:200px; margin-bottom:5px;"></div>
-            PRINCIPAL'S SIGNATURE
+          <!-- Divider -->
+          <div style="border-top:2px solid #000; margin-bottom:10px;"></div>
+
+          <!-- Student Info Grid -->
+          <div class="ms-info-grid" style="margin-bottom:6px;">
+            <div class="ms-field">
+              <span>STUDENT'S NAME:&nbsp;</span>
+              <span class="ms-field-val" id="pac-name"></span>
+            </div>
+            <div class="ms-field">
+              <span>ROLL NUMBER:&nbsp;</span>
+              <span class="ms-field-val" id="pac-roll"></span>
+            </div>
+            <div class="ms-field">
+              <span>FATHER'S NAME:&nbsp;</span>
+              <span class="ms-field-val" id="pac-fname"></span>
+            </div>
+            <div class="ms-field">
+              <span>ENROLLMENT NO:&nbsp;</span>
+              <span class="ms-field-val" id="pac-enroll">&nbsp;</span>
+            </div>
           </div>
-          <div style="width:80px; height:80px; border:2px solid #000; border-radius:50%; display:flex; align-items:center; justify-content:center; text-align:center; transform:rotate(-15deg); opacity:0.7;">
-            <strong>SCHOOL<br>STAMP</strong>
+          <div class="ms-field" style="margin-bottom:12px;">
+            <span>SCHOOL:&nbsp;</span>
+            <span class="ms-field-val">SCHOOL OF SCIENCE, BHEETA MAPHI</span>
+            <span id="pac-class" style="display:none;"></span>
           </div>
-          <div class="pdf-sign-box">
-            <div style="height:50px;"></div>
-            <div style="border-bottom:1.5px solid #000; width:200px; margin-bottom:5px;"></div>
-            CANDIDATE'S SIGNATURE
+
+          <!-- Exam Schedule Table -->
+          <table class="ms-table" style="margin-bottom:12px;">
+            <thead>
+              <tr>
+                <th colspan="4" style="font-size:13px; background:#c8d0e0; letter-spacing:1px;">EXAMINATION SCHEDULE</th>
+              </tr>
+              <tr>
+                <th style="width:100px;">SUBJECT CODE</th>
+                <th style="text-align:left;">SUBJECT NAME</th>
+                <th style="width:120px;">EXAM DATE</th>
+                <th style="width:90px;">TIME</th>
+              </tr>
+            </thead>
+            <tbody id="pac-subjects">
+              <!-- Populated via JS based on student class -->
+              <tr><td>011</td><td class="ms-sub-name">English Language</td><td></td><td></td></tr>
+              <tr><td>012</td><td class="ms-sub-name">Hindi</td><td></td><td></td></tr>
+              <tr><td>013</td><td class="ms-sub-name">Mathematics</td><td></td><td></td></tr>
+              <tr><td>014</td><td class="ms-sub-name">Science</td><td></td><td></td></tr>
+              <tr><td>015</td><td class="ms-sub-name">Social Science</td><td></td><td></td></tr>
+              <tr><td>016</td><td class="ms-sub-name">Computer Science</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+
+          <!-- Center Info -->
+          <div class="ms-field" style="margin-bottom:5px;">
+            <span>EXAMINATION CENTER NAME:&nbsp;</span>
+            <span class="ms-field-val">SCHOOL OF SCIENCE, GRAM BHEETA MAFI POST HATWA BAZAR BASTI</span>
           </div>
-        </div>
-        
-        <div style="text-align:center; font-size:12px; font-weight:700; margin-top:30px;">
-          GRAM BHEETA MAFI POST HATWA BAZAR BASTI<br>
-          Contact Us: Principal's Mobile: 9838266444 | General Enquiry: +91 02336-61121 | Email: khqaamn@gmail.com
-        </div>
-      </div>
+
+          <!-- Bottom: Center Code + T&C + Candidate Sign -->
+          <div style="display:flex; align-items:flex-start; gap:16px; margin-top:8px; margin-bottom:10px;">
+            <div style="min-width:160px;">
+              <div class="ms-field">
+                <span>CENTER CODE:&nbsp;</span>
+                <span class="ms-field-val" id="pac-center-code"></span>
+              </div>
+            </div>
+            <div style="flex:1; font-size:11px; font-weight:700; line-height:1.55;">
+              <div style="font-size:12px; font-weight:900; margin-bottom:3px;">EXAMINATION TERMS &amp; CONDITIONS:</div>
+              1. Students must report to the examination center 30 minutes before the commencement of the exam.<br>
+              2. Admission will not be allowed to candidates who arrive more than 15 minutes late.<br>
+              3. Standard school uniform and a valid photo ID (like Aadhaar or School ID) must be carried.<br>
+              4. Use of unfair means will lead to immediate cancellation of the candidate's paper.<br>
+              5. Possession of any electronic gadgets, including smartwatches, is strictly prohibited.
+            </div>
+            <div style="min-width:130px; text-align:center; font-size:11.5px; font-weight:800; align-self:flex-end;">
+              <div style="border-top:1.5px solid #000; padding-top:4px; width:130px;">CANDIDATE'S SIGNATURE</div>
+            </div>
+          </div>
+
+          <!-- Signatures Row -->
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; padding:0 8px; margin-top:8px;">
+            <div class="ms-sign-box">
+              <img src="../../assets/sign_ramakant.png" alt="Principal Signature"
+                style="height:44px; display:block; margin:0 auto 2px; mix-blend-mode:multiply;"
+                onerror="this.style.display='none'">
+              <div class="ms-sign-line" style="width:160px;"></div>
+              PRINCIPAL'S SIGNATURE
+              <div style="font-size:10px; font-weight:600; margin-top:2px;">(Ramakant Pandey)</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center;">
+              <img src="../../assets/stamp.png" alt="School Stamp"
+                style="width:88px; height:88px; object-fit:contain; transform:rotate(-12deg); mix-blend-mode:multiply; opacity:0.85;"
+                onerror="this.outerHTML='<div class=\'ms-stamp\'>SCHOOL<br>OF<br>SCIENCE<br><span style=\'font-size:9px;\'>★ STAMP ★</span></div>'">
+            </div>
+            <div class="ms-sign-box">
+              <div style="height:44px;"></div>
+              <div class="ms-sign-line" style="width:160px;"></div>
+              CONTROLLER OF EXAMINATIONS
+              <div style="font-size:10px; font-weight:600; margin-top:2px;">(Shivangi Pandey)</div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="ms-footer">
+            GRAM BHEETA MAFI POST HATWA BAZAR BASTI<br>
+            Contact Us: Principal's Mobile: 9838266444 &nbsp;|&nbsp; General Enquiry: +91 02336-61121 &nbsp;|&nbsp; Email: khqaamn@gmail.com
+          </div>
+
+        </div><!-- end ms-outer-border -->
+      </div><!-- end print-admit-card -->
+
 
       <!-- ========================================== -->
       <!-- 3. Fee Slip Template (A4)                  -->
       <!-- ========================================== -->
-      <div id="print-fee-slip" class="pdf-page" style="padding:30px 30px 30px 60px;">
+      <div id="print-fee-slip" class="pdf-page" style="padding:0;">
         <img src="../../assets/logo.png" class="pdf-watermark" alt="Watermark">
-        <div class="fee-shadow-edge"></div>
-        
+
+        <!-- Left punch holes -->
         <div class="pdf-holes">
-          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
+          <div class="pdf-hole"></div><div class="pdf-hole"></div><div class="pdf-hole"></div>
         </div>
+        <div class="fee-shadow-edge"></div>
 
-        <div class="pdf-title-block" style="display:flex; align-items:center; justify-content:center; gap:20px; margin-bottom:15px;">
-          <img src="../../assets/logo.png" style="width:70px;" alt="Logo">
-          <div style="text-align:left;">
-            <h1 style="font-size:22px;">SCHOOL OF SCIENCE, BHEETA MAPHI -</h1>
-            <h2 style="font-size:16px;">FEE PAYMENT RECEIPT</h2>
-          </div>
-        </div>
+        <!-- Content wrapper with left padding for holes -->
+        <div style="padding:28px 28px 24px 52px; position:relative; z-index:1; box-sizing:border-box;">
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-          <div class="pdf-field-box" style="width:30%;">RECEIPT NO: <span class="pdf-field-val"></span></div>
-          <div class="pdf-field-box" style="width:30%;">DATE: <span class="pdf-field-val" id="pfs-date"></span></div>
-          <div class="pdf-field-box" style="width:30%;">SESSION: <span class="pdf-field-val" id="pfs-year"></span></div>
-        </div>
+          <!-- Header -->
+          <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-bottom:2px solid #000; padding-bottom:12px;">
+            <img src="../../assets/logo.png" style="width:72px; flex-shrink:0;" alt="Logo">
+            <div>
+              <div style="font-size:18px; font-weight:900; text-transform:uppercase; line-height:1.2;">SCHOOL OF SCIENCE, BHEETA MAPHI</div>
+              <div style="font-size:15px; font-weight:800; text-transform:uppercase;">FEE PAYMENT RECEIPT</div>
+            </div>
+          </div>
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-          <div style="width:48%;">
-            <div class="pdf-field-box">STUDENT NAME: <span class="pdf-field-val" id="pfs-name"></span></div>
-            <div class="pdf-field-box">FATHER'S NAME: <span class="pdf-field-val" id="pfs-fname"></span></div>
+          <!-- Receipt No / Date / Session -->
+          <div style="display:flex; gap:24px; margin-bottom:12px; font-size:13px; font-weight:800;">
+            <div>RECEIPT NO: <span class="ms-field-val" id="pfs-receipt-no" style="min-width:100px;"></span></div>
+            <div>DATE: <span class="ms-field-val" id="pfs-date" style="min-width:90px;"></span></div>
+            <div>SESSION: <span class="ms-field-val" id="pfs-year" style="min-width:80px;"></span></div>
           </div>
-          <div style="width:48%;">
-            <div class="pdf-field-box">ROLL NUMBER: <span class="pdf-field-val" id="pfs-roll"></span></div>
-            <div class="pdf-field-box">CLASS: <span class="pdf-field-val" id="pfs-class"></span></div>
-          </div>
-        </div>
-        
-        <div style="font-weight:900; font-size:16px; margin-bottom:5px;">FEE PARTICULARS</div>
-        <table class="pdf-table">
-          <thead>
-            <tr>
-              <th style="width:80px;">SERIAL NO</th>
-              <th style="text-align:left;">FEE PARTICULAR</th>
-              <th style="width:120px; text-align:right;">AMOUNT (INR)</th>
-            </tr>
-          </thead>
-          <tbody id="pfs-rows">
-            <!-- Populated via JS -->
-          </tbody>
-          <tfoot style="font-weight:900; font-size:15px;">
-            <tr>
-              <td colspan="2" style="text-align:right; border-top:2px solid #000;">TOTAL</td>
-              <td style="text-align:right; border-top:2px solid #000;">₹<span id="pfs-total"></span></td>
-            </tr>
-          </tfoot>
-        </table>
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-          <div style="width:48%;">
-            <div class="pdf-field-box">TOTAL FEE PAYABLE: <span class="pdf-field-val"></span></div>
-            <div class="pdf-field-box">AMOUNT PAID: <span class="pdf-field-val"></span></div>
-            <div class="pdf-field-box">PAYMENT MODE: <span class="pdf-field-val">Cash / Online</span></div>
+          <!-- Student Info -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 24px; margin-bottom:6px;">
+            <div class="ms-field"><span>STUDENT NAME:&nbsp;</span><span class="ms-field-val" id="pfs-name"></span></div>
+            <div class="ms-field"><span>ROLL NUMBER:&nbsp;</span><span class="ms-field-val" id="pfs-roll"></span></div>
+            <div class="ms-field"><span>FATHER'S NAME:&nbsp;</span><span class="ms-field-val" id="pfs-fname"></span></div>
+            <div style="display:flex; gap:16px;">
+              <div class="ms-field"><span>CLASS:&nbsp;</span><span class="ms-field-val" id="pfs-class" style="min-width:40px;"></span></div>
+              <div class="ms-field"><span>SECTION:&nbsp;</span><span class="ms-field-val" id="pfs-section" style="min-width:30px;">A</span></div>
+            </div>
           </div>
-          <div style="width:48%;">
-            <div class="pdf-field-box">AMOUNT PAID: <span class="pdf-field-val"></span></div>
-            <div class="pdf-field-box">TRANSACTION ID: <span class="pdf-field-val"></span></div>
-            <div class="pdf-field-box">REMAINING BALANCE: <span class="pdf-field-val">₹0.00</span></div>
-          </div>
-        </div>
-        
-        <div style="margin-bottom:15px; font-size:13px; font-weight:700;">
-          <strong>NOTE:</strong> This is a sample receipt. All fees paid are non-refundable. Please keep this receipt for future reference. Total amount includes all term fees, examination fees, and lab charges as specified.<span id="pfs-words" style="display:none;"></span>
-        </div>
 
-        <div style="display:flex; justify-content:space-between; margin-top:50px; padding:0 20px; align-items:flex-end;">
-          <div class="pdf-sign-box" style="text-align:left;">
-            <img src="../../assets/principal.png" alt="Sign" style="margin:0 0 5px 0;">
-            <div style="border-bottom:1.5px solid #000; width:220px; margin-bottom:5px;"></div>
-            AUTHORIZED SIGNATORY<br><span style="font-weight:normal;">(Ramakant Pandey)</span>
+          <!-- FEE PARTICULARS -->
+          <div style="font-weight:900; font-size:14px; margin:10px 0 5px;">FEE PARTICULARS</div>
+          <table class="ms-table" style="font-size:13px; margin-bottom:10px;">
+            <thead>
+              <tr>
+                <th style="width:80px;">SERIAL NO</th>
+                <th style="text-align:left;">FEE PARTICULAR</th>
+                <th style="width:130px; text-align:right;">AMOUNT (INR)</th>
+              </tr>
+            </thead>
+            <tbody id="pfs-rows">
+              <!-- Populated via JS -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2" style="text-align:right; font-weight:900; border-top:2px solid #000; padding:6px 10px;">TOTAL</td>
+                <td style="text-align:right; font-weight:900; border-top:2px solid #000; padding:6px 10px;">INR <span id="pfs-total"></span></td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <!-- Summary -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px 24px; font-size:13px; font-weight:800; margin-bottom:10px;">
+            <div class="ms-field"><span>TOTAL FEE PAYABLE:&nbsp;</span><span class="ms-field-val" id="pfs-payable"></span></div>
+            <div class="ms-field"><span>AMOUNT PAID:&nbsp;</span><span class="ms-field-val" id="pfs-paid-right"></span></div>
+            <div class="ms-field"><span>AMOUNT PAID:&nbsp;</span><span class="ms-field-val" id="pfs-paid"></span></div>
+            <div class="ms-field"><span>TRANSACTION ID (if online):&nbsp;</span><span class="ms-field-val" id="pfs-txn" style="min-width:60px;">&nbsp;</span></div>
+            <div class="ms-field"><span>PAYMENT MODE:&nbsp;</span><span class="ms-field-val" id="pfs-mode" style="font-style:italic;">Cash</span></div>
           </div>
-          <div style="width:100px; height:100px; border:2px solid #8b5cf6; border-radius:50%; display:flex; align-items:center; justify-content:center; text-align:center; transform:rotate(-10deg); opacity:0.8; color:#8b5cf6;">
-            <strong>SCHOOL OF<br>SCIENCE<br><span style="font-size:18px;">PAID</span><br>BHEETA MAPHI</strong>
+
+          <!-- Note -->
+          <div style="font-size:12px; font-weight:700; margin-bottom:20px; line-height:1.5;">
+            <strong>NOTE:</strong> This is an official receipt. All fees paid are non-refundable. Please keep this receipt for future reference. Total amount includes all term fees, examination fees, and lab charges as specified.
           </div>
-          <div style="width:200px;"></div>
-        </div>
-        
-        <div style="text-align:center; font-size:12px; font-weight:700; margin-top:30px;">
-          Contact Us: Principal's Mobile: 9838266444 | General Enquiry: +91 02336-61121 | Email: khqaamn@gmail.com
-        </div>
-      </div>
+
+          <!-- Signature + Stamp -->
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; padding:0 10px;">
+            <div class="ms-sign-box" style="text-align:left;">
+              <img src="../../assets/sign_ramakant.png" alt="Signature"
+                style="height:44px; display:block; margin:0 0 3px; mix-blend-mode:multiply;"
+                onerror="this.style.display='none'">
+              <div style="border-bottom:1.5px solid #000; width:200px; margin-bottom:5px;"></div>
+              <div style="font-size:12px; font-weight:800;">AUTHORIZED SIGNATORY</div>
+              <div style="font-size:11px; font-weight:600;">(Ramakant Pandey)</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center;">
+              <div style="position:relative;">
+                <img src="../../assets/stamp.png" alt="Paid Stamp"
+                  style="width:95px; height:95px; object-fit:contain; transform:rotate(-10deg); mix-blend-mode:multiply; opacity:0.85;"
+                  onerror="this.style.display='none'">
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-10deg); font-size:14px; font-weight:900; color:#1e40af; letter-spacing:2px; mix-blend-mode:multiply;">PAID</div>
+              </div>
+            </div>
+            <div style="width:180px;"></div>
+          </div>
+
+          <!-- Footer -->
+          <div style="text-align:center; font-size:11.5px; font-weight:700; margin-top:18px; padding-top:10px; border-top:1.5px solid #000;">
+            Contact Us: Principal's Mobile: 9838266444 &nbsp;|&nbsp; General Enquiry: +91 02336-61121 &nbsp;|&nbsp; Email: khqaamn@gmail.com
+          </div>
+
+        </div><!-- end content wrapper -->
+      </div><!-- end print-fee-slip -->
+
     </div>
     <!-- Profile Modal -->
     <div id="profile-modal" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;overflow-y:auto;padding:20px;">

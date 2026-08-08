@@ -497,10 +497,38 @@
     <button class="sidebar-item" data-section="messages">
       <span class="sidebar-item-icon">✉️</span> Messages
     </button>
+    <div class="sidebar-section-title">System</div>
+    <button class="sidebar-item" data-section="settings">
+      <span class="sidebar-item-icon">⚙️</span> Settings
+    </button>
   </nav>
 
   <!-- Main Content -->
   <main class="admin-main">
+
+    <!-- ── SETTINGS ── -->
+    <section class="admin-section" id="section-settings">
+      <div class="admin-page-header">
+        <div class="admin-page-title">⚙️ App Settings</div>
+        <button class="btn btn-primary btn-sm" onclick="saveSettings()">💾 Save Settings</button>
+      </div>
+      
+      <div class="admin-table-wrap" style="padding: 20px;">
+        <h3 style="margin-top:0; margin-bottom:15px; font-size:18px;">Student Dashboard Access</h3>
+        <p style="font-size:14px; color:var(--color-text-muted); margin-bottom:20px;">Toggle whether students can access these features from their dashboard.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:15px;">
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:700;">
+            <input type="checkbox" id="toggle-admit-cards" style="width:20px; height:20px; accent-color:var(--color-primary);">
+            Enable Admit Card Download
+          </label>
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:700;">
+            <input type="checkbox" id="toggle-results" style="width:20px; height:20px; accent-color:var(--color-primary);">
+            Enable Result (Marksheet) View
+          </label>
+        </div>
+      </div>
+    </section>
 
     <!-- ── DASHBOARD ── -->
     <section class="admin-section active" id="section-dashboard">
@@ -576,6 +604,9 @@
       <div class="filter-bar">
         <select id="student-class-filter" onchange="loadStudents()">
           <option value="">All Classes</option>
+          <option value="Nursery">Nursery</option>
+          <option value="LKG">LKG</option>
+          <option value="UKG">UKG</option>
           <option value="1">Class 1</option><option value="2">Class 2</option>
           <option value="3">Class 3</option><option value="4">Class 4</option>
           <option value="5">Class 5</option><option value="6">Class 6</option>
@@ -625,6 +656,9 @@
               <label class="form-label">Head of Class (Class Teacher)</label>
               <select id="t-class-head" class="form-control">
                 <option value="">None</option>
+                <option value="Nursery">Nursery</option>
+                <option value="LKG">LKG</option>
+                <option value="UKG">UKG</option>
                 <option value="1">Class 1</option><option value="2">Class 2</option>
                 <option value="3">Class 3</option><option value="4">Class 4</option>
                 <option value="5">Class 5</option><option value="6">Class 6</option>
@@ -734,6 +768,9 @@
       <div class="filter-bar">
         <select id="results-class-filter" onchange="loadResults()">
           <option value="">All Classes</option>
+          <option value="Nursery">Nursery</option>
+          <option value="LKG">LKG</option>
+          <option value="UKG">UKG</option>
           <option value="1">Class 1</option><option value="2">Class 2</option>
           <option value="3">Class 3</option><option value="4">Class 4</option>
           <option value="5">Class 5</option><option value="6">Class 6</option>

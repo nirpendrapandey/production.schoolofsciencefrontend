@@ -465,19 +465,17 @@ function generatePDF(elementId, filename, btnId) {
 
   const printContainer = document.getElementById(elementId);
   printContainer.style.display = 'block'; // Temporarily show it for html2pdf
-  printContainer.style.minWidth = '790px';
-  
+
   function triggerDownload() {
     const opt = {
       margin:       0,
       filename:     filename,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0 },
-      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      image:        { type: 'jpeg', quality: 0.99 },
+      html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, allowTaint: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     html2pdf().set(opt).from(printContainer).save().then(() => {
       printContainer.style.display = 'none'; // Hide again
-      printContainer.style.minWidth = '';
       if (btn) { btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
     }).catch(() => {
       printContainer.style.display = 'none';
@@ -505,6 +503,14 @@ async function showConsolidatedMarksheet() {
   }
 
   try {
+    // Check global settings first
+    const setRes = await API.get('/settings');
+    if (setRes.success && setRes.data && !setRes.data.resultsActive) {
+      if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+      alert('Results are not available at this moment. Please contact the administrator.');
+      return;
+    }
+
     const res = await API.get('/results');
     if (!btn) return;
     
@@ -517,43 +523,77 @@ async function showConsolidatedMarksheet() {
 
     const user = Auth.getUser();
     let totalMarks = 0;
-    let totalMaxMarks = res.data.length * 100;
+    let totalMaxMarks = 0;
 
-    const standardSubjects = ["English Language", "Hindi", "Mathematics", "Science", "Social Science", "Computer Science"];
+    // UP Board subject code mapping
+    const subjectCodes = {
+      'Hindi': '001', 'English': '002', 'English Language': '002',
+      'Mathematics': '003', 'Science': '004', 'Social Science': '005',
+      'Drawing': '006', 'Computer': '007', 'Sanskrit': '008',
+      'G.K': '009', 'EVS': '010', 'Rhymes': '011',
+      'General Hindi': '001', 'Physics': '012', 'Chemistry': '013',
+      'Biology': '014'
+    };
+
     let subjectsHtml = '';
-    res.data.forEach((r, idx) => {
-      totalMarks += (r.percentage || 0);
-      const gradeMap = [[90,'A'],[80,'B'],[70,'C'],[60,'D'],[50,'E'],[0,'G']]; // using simpler grades or match image
-      const grade = (gradeMap.find(([min]) => (r.percentage||0) >= min) || ['','F'])[1];
-      const code = '01' + (idx + 1);
-      const subjName = standardSubjects[idx] || r.examName;
+
+    // Deduplicate by subject name — keep entry with higher marks (handles old duplicate DB records)
+    const subjectMap = new Map();
+    res.data.forEach(r => {
+      const subj = (r.subject || '').trim();
+      if (!subjectMap.has(subj) || Number(r.marks || 0) > Number(subjectMap.get(subj).marks || 0)) {
+        subjectMap.set(subj, r);
+      }
+    });
+    const uniqueResults = Array.from(subjectMap.values());
+
+    uniqueResults.forEach((r, idx) => {
+      const marksObtained = Number(r.marks || 0);
+      const maxM = Number(r.maxMarks || 100);
+      totalMarks += marksObtained;
+      totalMaxMarks += maxM;
+      const pct = maxM > 0 ? Math.round((marksObtained / maxM) * 100) : 0;
+      // Grade as per UP Board pattern
+      let grade = 'F';
+      if (pct >= 90) grade = 'A+';
+      else if (pct >= 80) grade = 'A';
+      else if (pct >= 70) grade = 'B';
+      else if (pct >= 60) grade = 'C';
+      else if (pct >= 50) grade = 'D';
+      else if (pct >= 33) grade = 'E';
+      const code = subjectCodes[r.subject] || ('0' + (idx + 1).toString().padStart(2, '0'));
+      const subjName = r.subject || ('Subject ' + (idx + 1));
       subjectsHtml += `
         <tr>
-          <td style="text-align:center;">${code}</td>
-          <td>${subjName}</td>
-          <td style="text-align:center;">100</td>
-          <td style="text-align:center;">${r.percentage || 0}</td>
-          <td style="text-align:center; font-weight:bold;">${grade}</td>
+          <td>${code}</td>
+          <td class="ms-sub-name">${subjName}</td>
+          <td>${maxM}</td>
+          <td>${marksObtained}</td>
+          <td style="font-weight:bold;">${grade}</td>
         </tr>
       `;
     });
 
-    const overallPct = Math.round((totalMarks / totalMaxMarks) * 100);
+    const overallPct = totalMaxMarks > 0 ? Math.round((totalMarks / totalMaxMarks) * 100) : 0;
     const finalResult = overallPct >= 33 ? 'PASS' : 'FAIL';
     
-    let baseYear = new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1;
+    const now = new Date();
+    const fullYear = now.getFullYear();
 
-    // Populate hidden template
-    document.getElementById('pm-name').textContent = user.name;
-    document.getElementById('pm-fname').textContent = user.fatherName || '—';
+    // Populate template
+    document.getElementById('pm-name').textContent = user.name || '—';
+    document.getElementById('pm-fname').textContent = (user.fatherName || '—').toUpperCase();
     document.getElementById('pm-roll').textContent = user.rollNumber || '—';
     document.getElementById('pm-class').textContent = user.class ? `Class ${user.class}` : '—';
-    document.getElementById('pm-year').textContent = `${baseYear}-${String(baseYear+1).slice(-2)}`;
+    // Title line: CLASS 10 (2026)
+    const classTitleEl = document.getElementById('pm-class-title');
+    if (classTitleEl) classTitleEl.textContent = user.class || '—';
+    document.getElementById('pm-year').textContent = fullYear;
     document.getElementById('pm-subjects').innerHTML = subjectsHtml;
-    document.getElementById('pm-total').textContent = `${totalMarks} / ${totalMaxMarks}`;
+    document.getElementById('pm-total').textContent = `${totalMarks}/${totalMaxMarks}`;
     document.getElementById('pm-pct').textContent = overallPct;
     document.getElementById('pm-result').textContent = finalResult;
-    document.getElementById('pm-result').style.color = finalResult === 'PASS' ? '#10b981' : '#ef4444';
+    document.getElementById('pm-result').style.color = finalResult === 'PASS' ? '#15803d' : '#dc2626';
 
     btn.innerHTML = originalHtml;
     btn.style.pointerEvents = 'auto';
@@ -577,6 +617,14 @@ async function downloadAdmitCard() {
   }
 
   try {
+    // Check global settings first
+    const setRes = await API.get('/settings');
+    if (setRes.success && setRes.data && !setRes.data.admitCardsActive) {
+      if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
+      alert('Admit Cards are not available at this moment. Please contact the administrator.');
+      return;
+    }
+
     const res = await API.get('/admit-card/config');
     if (!res.success || !res.data || !res.data.active) {
       if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
@@ -607,13 +655,21 @@ async function downloadAdmitCard() {
 
     const user = Auth.getUser();
     
-    // Populate hidden template
+    // Populate admit card template
     document.getElementById('pac-exam').textContent = config.examName;
-    document.getElementById('pac-name').textContent = user.name;
-    document.getElementById('pac-fname').textContent = user.fatherName || '—';
+    document.getElementById('pac-name').textContent = (user.name || '—').toUpperCase();
+    document.getElementById('pac-fname').textContent = (user.fatherName || '—').toUpperCase();
     document.getElementById('pac-class').textContent = user.class ? `Class ${user.class}` : '—';
     document.getElementById('pac-roll').textContent = user.rollNumber || '—';
-    document.getElementById('pac-session').textContent = `${baseYear}-${String(baseYear+1).slice(-2)}`;
+    document.getElementById('pac-session').textContent = baseYear;
+    // Class title in header: "CLASS 10"
+    const pacClassTitle = document.getElementById('pac-class-title');
+    if (pacClassTitle) pacClassTitle.textContent = user.class || '—';
+    // Enrollment & Center Code (use roll number as placeholder)
+    const pacEnroll = document.getElementById('pac-enroll');
+    if (pacEnroll) pacEnroll.textContent = '—';
+    const pacCenter = document.getElementById('pac-center-code');
+    if (pacCenter) pacCenter.textContent = user.rollNumber || '—';
 
     if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
 
@@ -642,42 +698,76 @@ window.showConsolidatedReceipt = function() {
   API.get('/fees').then(res => {
     const feesList = res.success ? (res.data || []) : [];
     
-    let totalPaid = 0;
-    let rowsHtml = '';
+    const monthNames = ["", "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
     
-    const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    
-    feesList.forEach(f => {
+    // Filter paid months in session
+    const paidMonths = feesList.filter(f => {
       const mNum = parseInt(f.month);
       const yNum = parseInt(f.year);
-      const isCurrentSession = (mNum >= 4 && yNum === baseYear) || (mNum < 4 && yNum === baseYear + 1);
-      if (isCurrentSession && f.payment_status === 'paid') {
-        totalPaid += (f.amount || 0);
-        rowsHtml += `
-          <tr style="border-bottom:1px solid #e2e8f0;">
-            <td style="padding:12px; border:1px solid #0f766e;">Tuition Fee - ${monthNames[mNum]} ${yNum}</td>
-            <td style="padding:12px; text-align:right; border:1px solid #0f766e;">₹${f.amount || 0}</td>
-          </tr>
-        `;
-      }
+      const inSession = (mNum >= 4 && yNum === baseYear) || (mNum < 4 && yNum === baseYear + 1);
+      return inSession && f.payment_status === 'paid';
     });
 
-    if (totalPaid === 0) {
+    if (paidMonths.length === 0) {
       if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
       alert('You have no paid fees for the selected academic year to generate a receipt.');
       return;
     }
 
-    // Populate hidden template
-    document.getElementById('pfs-name').textContent = user.name;
-    document.getElementById('pfs-fname').textContent = user.fatherName || '—';
+    // Build rows — one row per month as "Monthly Tuition Fee - April 2025" etc.
+    let serialNo = 1;
+    let totalPaid = 0;
+    let rowsHtml = '';
+
+    paidMonths.forEach(f => {
+      const mNum = parseInt(f.month);
+      const yNum = parseInt(f.year);
+      const amount = Number(f.amount || 0);
+      totalPaid += amount;
+      rowsHtml += `
+        <tr>
+          <td style="text-align:center;">${serialNo++}</td>
+          <td class="ms-sub-name">Monthly Tuition Fee – ${monthNames[mNum]} ${yNum}</td>
+          <td style="text-align:right;">${amount.toLocaleString('en-IN', {minimumFractionDigits:2})}</td>
+        </tr>
+      `;
+    });
+
+    // Calculate remaining balance: total dues in session - total paid
+    const allSessionFees = feesList.filter(f => {
+      const mNum = parseInt(f.month);
+      const yNum = parseInt(f.year);
+      return (mNum >= 4 && yNum === baseYear) || (mNum < 4 && yNum === baseYear + 1);
+    });
+    const totalDue = allSessionFees.reduce((sum, f) => sum + Number(f.amount || 0), 0);
+    const remaining = Math.max(0, totalDue - totalPaid);
+
+    // Receipt number: SS + year + roll + random
+    const recNo = `SS${baseYear}-${(user.rollNumber || '000').toString().slice(-3)}-${String(paidMonths.length).padStart(2,'0')}${String(Math.floor(Math.random()*99)+1).padStart(2,'0')}`;
+    const today = new Date();
+    const dateStr = `${String(today.getDate()).padStart(2,'0')}/${String(today.getMonth()+1).padStart(2,'0')}/${today.getFullYear()}`;
+    const amtFormatted = `INR ${totalPaid.toLocaleString('en-IN', {minimumFractionDigits:2})}`;
+    const dueFormatted = `INR ${totalDue.toLocaleString('en-IN', {minimumFractionDigits:2})}`;
+    const remainFormatted = `INR ${remaining.toLocaleString('en-IN', {minimumFractionDigits:2})}`;
+
+    // Populate template
+    document.getElementById('pfs-receipt-no').textContent = recNo;
+    document.getElementById('pfs-name').textContent = (user.name || '—').toUpperCase();
+    document.getElementById('pfs-fname').textContent = (user.fatherName || '—').toUpperCase();
     document.getElementById('pfs-class').textContent = user.class ? `Class ${user.class}` : '—';
     document.getElementById('pfs-roll').textContent = user.rollNumber || '—';
-    document.getElementById('pfs-date').textContent = new Date().toLocaleDateString();
+    document.getElementById('pfs-date').textContent = dateStr;
     document.getElementById('pfs-year').textContent = `${baseYear}-${String(baseYear+1).slice(-2)}`;
     document.getElementById('pfs-rows').innerHTML = rowsHtml;
-    document.getElementById('pfs-total').textContent = totalPaid;
-    document.getElementById('pfs-words').textContent = numberToWords(totalPaid) + ' Rupees Only';
+    document.getElementById('pfs-total').textContent = totalPaid.toLocaleString('en-IN', {minimumFractionDigits:2});
+    // Summary fields
+    const payable = document.getElementById('pfs-payable');
+    if (payable) payable.textContent = dueFormatted;
+    const paid = document.getElementById('pfs-paid');
+    if (paid) paid.textContent = amtFormatted;
+    const paidR = document.getElementById('pfs-paid-right');
+    if (paidR) paidR.textContent = amtFormatted;
 
     if(btn){ btn.innerHTML = originalHtml; btn.style.pointerEvents = 'auto'; }
     generatePDF('print-fee-slip', `FeeReceipt_${user.name.replace(/ /g,'_')}.pdf`, null);
